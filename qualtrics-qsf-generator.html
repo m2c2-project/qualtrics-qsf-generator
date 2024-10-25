@@ -86,13 +86,64 @@
 <body>
     <h1>M2C2 Qualtrics QSF Generator</h1>
     <div class="instructions">
+        <h3>About This QSF Qualtrics Generator</h3>
+        <p>This tool is designed to create a QSF file for our M2C2 cognitive activities, allowing for integration into Qualtrics. Once generated, the QSF file will need to be imported into Qualtrics, after which you can add survey questions as desired. Please note that JavaScript must be enabled for this tool, which is not available in the free version of Qualtrics.</p>
+
+        <h4>How to Import the QSF File into Qualtrics</h4>
+        <p>Follow these steps to import the QSF file:</p>
+        <ol>
+            <li>Go to <strong>Qualtrics</strong> and select <strong>Create a new project</strong>.</li>
+            <li>Choose <strong>Survey</strong> and click <strong>Get Started</strong>.</li>
+            <li>In the <strong>Name Project</strong> field, enter your project name.</li>
+            <li>Use the dropdown menu to select <strong>Import a QSF file</strong>.</li>
+            <li>Choose the QSF file you downloaded from this QSF generator.</li>
+            <li>Select <strong>Create Project</strong>.</li>
+        </ol>
+
         <h3>Instructions:</h3>
         <ul>
             <li>Tasks are presented to the user in the order displayed below. If you would like, you can click and drag the tasks to change the order.</li>
             <li>Specify the number of trials for each task. If you do not want a specific task, please enter '0' trials.</li>
-            <li>The number of trials and language will be added to the parameters for each task. Additional parameters can be added if desired. Additional parameters should only be entered as one line of 'key:value' pairs separated by a comma.</li>
-            <li>All cognitive tasks will run back-to-back. Auto next/submit will 'click' the next/submit button on that Qualtrics page.</li>
+            <li>All cognitive tasks will run back-to-back. Auto next/submit will 'click' the next/submit button on that Qualtrics page. This is recommended.</li>
+	        <li>The number of trials and language will be added to the parameters for each task. Additional parameters can be added if desired. The majority of the time, the defaults will suffice. Only change parameters if you understand why you are changing the parameter. Additional parameters should only be entered as one line of 'key:value' pairs separated by a comma. You can find the schemas listed here for each cognitive activity: <a href="https://m2c2-project.github.io/m2c2kit/docs/schemas/what-is-schema" target="_blank">visit m2c2kit webpage</a></li>
         </ul>
+        <hr>
+
+        <p>The suggested default parameters are designed for brief assessments on mobile devices. Each takes approximately one minute to administer and is intended to be repeated multiple times a day over several days.</p>
+
+        <hr>
+
+        <h3>Current Cognitive Activities</h3>
+
+        <p><b><u>Symbol Search</u></b><br>
+        number_of_trials: 20</p>
+
+        <p><b><u>Grid Memory</u></b><br>
+        number_of_trials: 4</p>
+
+        <p><b><u>Color Dots</u></b><br>
+        number_of_trials: 5</p>
+
+        <p><b><u>Color Shapes</u></b><br>
+        number_of_trials: 12<br>
+        number_of_different_colors_trials: 6<br>
+        shapes_presented_duration_ms: 500</p>
+
+        <hr>
+
+        <p>The suggested default number of trials is 12. The number of trials <b>MUST</b> be an <b>EVEN number</b>.<br>
+        <b>IMPORTANT:</b> The <b>number_of_different_colors_trials</b> should be ½ the total number of trials (e.g., if <b>number_of_trials = 20</b>, then the <b>number_of_different_colors_trials = 10</b>). Please make sure to also update this parameter.</p>
+
+        <hr>
+
+        <p>The <b>number_of_different_colors_trials</b> parameter is the number of trials where the shapes will change colors from the study phase to the test phase, where the correct answer chosen would be “Different.” The suggested default is 6 for this parameter to coincide with ½ of the number of default trials, which is 12.<br>
+        <b>IMPORTANT:</b> The <b>number_of_different_colors_trials</b> should be ½ the total number of trials (e.g., if <b>number_of_trials = 20</b>, then the <b>number_of_different_colors_trials = 10</b>).</p>
+
+        <hr>
+
+        <p>The <b>shapes_presented_duration_ms</b> parameter is how long the shapes are shown in milliseconds. The default is 500 ms, but for older adults with suspected impairments or elevated dementia risk, it is suggested to make this 2000 ms.</p>
+
+        <hr>
     </div>
     
     <form id="taskForm">
