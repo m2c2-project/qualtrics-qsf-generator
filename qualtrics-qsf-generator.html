@@ -145,9 +145,107 @@
 
         <hr>
     </div>
-    
-    <!-- Rest of the form and JavaScript logic -->
-    
+
+    <form id="taskForm">
+        <ul id="sortableTasks" class="task-list">
+            <li data-task="SYMBOL_SEARCH">
+                <span>Symbol Search</span>
+                <input type="number" id="symbolSearch" name="symbolSearch" required min="0" placeholder="# Trials" value="">
+                <textarea id="symbolSearchParams" name="symbolSearchParams" rows="4" cols="50" placeholder="Additional Parameters"></textarea>
+            </li>
+            <li data-task="COLOR_DOTS">
+                <span>Color Dots</span>
+                <input type="number" id="colorDots" name="colorDots" required min="0" placeholder="# Trials">
+                <textarea id="colorDotsParams" name="colorDotsParams" rows="4" cols="50" placeholder="Additional Parameters"></textarea>
+            </li>
+            <li data-task="COLOR_SHAPES">
+                <span>Color Shapes</span>
+                <input type="number" id="colorShapes" name="colorShapes" required min="0" placeholder="# Trials">
+                <textarea id="colorShapesParams" name="colorShapesParams" rows="4" cols="50" placeholder="Additional Parameters"></textarea>
+            </li>
+            <li data-task="GRID_MEMORY">
+                <span>Grid Memory</span>
+                <input type="number" id="gridMemory" name="gridMemory" required min="0" placeholder="# Trials">
+                <textarea id="gridMemoryParams" name="gridMemoryParams" rows="4" cols="50" placeholder="Additional Parameters"></textarea>
+            </li>
+        </ul>
+        <br>
+        <div class="auto-next-container">
+            <label for="autoNext">Auto Next/Submit</label>
+            &nbsp;
+            <input type="checkbox" id="autoNext" name="autoNext" value="TRUE">
+        </div>
+        <div class="language-container">
+            <label for="m2c2Language">Language</label>
+            &nbsp;
+            <select id="m2c2Language" name="m2c2Language">
+                <option value="en-US">English (en-US)</option>
+                <option value="es-MX">Spanish (es-MX)</option>
+                <option value="fr-FR">French (fr-FR)</option>
+                <option value="de-DE">German (de-DE)</option>
+                <option value="jp-JP">Japanese (jp-JP)</option>
+            </select>
+        </div>
+        <br><br>
+
+        <button type="submit">Generate Qualtrics QSF File</button>
+        <br><br>
+    </form>
+
+    <a id="downloadLink" style="display:none">Download the Qualtrics QSF File</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Sortable.js for dragging tasks
+            const sortable = new Sortable(document.getElementById('sortableTasks'), {
+                animation: 150,
+                ghostClass: 'sortable-ghost'
+            });
+        });
+
+        document.getElementById('taskForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get the form data
+            const colorDots = document.getElementById('colorDots').value;
+            const colorShapes = document.getElementById('colorShapes').value;
+            const gridMemory = document.getElementById('gridMemory').value;
+            const symbolSearch = document.getElementById('symbolSearch').value;
+
+            const colorDotsAddParams = document.getElementById('colorDotsParams').value;
+            const colorShapesAddParams = document.getElementById('colorShapesParams').value;
+            const gridMemoryAddParams = document.getElementById('gridMemoryParams').value;
+            const symbolSearchAddParams = document.getElementById('symbolSearchParams').value;
+
+            var autoComplete = "FALSE";
+            if (document.getElementById('autoNext').checked) {
+                autoComplete = "TRUE";
+            }
+
+            // Get the task order from the sorted list
+            const taskOrderElements = document.querySelectorAll('#sortableTasks li');
+            const taskOrder = Array.from(taskOrderElements).map(el => el.dataset.task);
+            const taskOrderString = taskOrder.join(',').toUpperCase();
+
+            const language = document.getElementById('m2c2Language').value;
+
+            // Generate the QSF
+            const qsf = generateQSF(colorDots, colorShapes, gridMemory, symbolSearch, language, taskOrderString, autoComplete, colorDotsAddParams, colorShapesAddParams, gridMemoryAddParams, symbolSearchAddParams);
+
+            // Create a download link
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = URL.createObjectURL(qsf);
+            downloadLink.download = 'm2c2_qualtrics.qsf';
+            downloadLink.textContent = 'Click here to download your Qualtrics QSF File';
+            downloadLink.style.display = 'block';
+        });
+
+        function generateQSF(colorDots, colorShapes, gridMemory, symbolSearch, language, taskOrderString, autoComplete, colorDotsAddParams, colorShapesAddParams, gridMemoryAddParams, symbolSearchAddParams) {
+            const qsf = {/* QSF structure */};
+            // Update QSF structure with form data...
+            return new Blob([JSON.stringify(qsf)], { type: 'application/json' });
+        }
+    </script>
 </body>
 
 </html>
