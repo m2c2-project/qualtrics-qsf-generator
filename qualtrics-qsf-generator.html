@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M2C2 Qualtrics QSF Generator</title>
-<style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 50px;
@@ -79,8 +79,15 @@
         .instructions li {
             margin-bottom: 10px;
         }
+
+        .swal2-html-container {
+            text-align: left !important;
+        }
+
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -103,7 +110,7 @@
         <h3>Instructions:</h3>
         <ul>
             <li>Tasks are presented to the user in the order displayed below. If you would like, you can click and drag the tasks to change the order.</li>
-            <li>Specify the number of trials for each task. If you do not want a specific task, please enter '0' trials.</li>
+            <li>Specify the number of trials for each task. If you do not want a specific task, please enter '0' trials. Tasks with no trials will be moved to the end of the list automatically when generating the QSF file.</li>
             <li>All cognitive tasks will run back-to-back. Auto next/submit will 'click' the next/submit button on that Qualtrics page. This is recommended.</li>
 	        <li>The number of trials and language will be added to the parameters for each task. Additional parameters can be added if desired. The majority of the time, the defaults will suffice. Only change parameters if you understand why you are changing the parameter. Additional parameters should only be entered as one line of 'key:value' pairs separated by a comma. You can find the schemas listed here for each cognitive activity: <a href="https://m2c2-project.github.io/m2c2kit/docs/schemas/what-is-schema" target="_blank">visit m2c2kit webpage</a> Here is an example of a parameter and the format: show_quit_button=false::boolean.
 </li>
@@ -150,28 +157,31 @@
         <ul id="sortableTasks" class="task-list">
             <li data-task="SYMBOL_SEARCH">
                 <span>Symbol Search</span>
-                <input type="number" id="symbolSearch" name="symbolSearch" required min="0" placeholder="# Trials"
-                    value="">
-                <textarea id="symbolSearchParams" name="symbolSearchParams" rows="4" cols="50"
-                    placeholder="Additional Parameters"></textarea>
-            </li>
-            <li data-task="COLOR_DOTS">
-                <span>Color Dots</span>
-                <input type="number" id="colorDots" name="colorDots" required min="0" placeholder="# Trials">
-                <textarea id="colorDotsParams" name="colorDotsParams" rows="4" cols="50"
-                    placeholder="Additional Parameters"></textarea>
-            </li>
-            <li data-task="COLOR_SHAPES">
-                <span>Color Shapes</span>
-                <input type="number" id="colorShapes" name="colorShapes" required min="0" placeholder="# Trials">
-                <textarea id="colorShapesParams" name="colorShapesParams" rows="4" cols="50"
+                <input type="number" id="SYMBOL_SEARCH" name="symbolSearch" required min="0" placeholder="# Trials"
+                    value="20">
+                <textarea id="SYMBOL_SEARCH_PARAMS" name="SYMBOL_SEARCH_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters"></textarea>
             </li>
             <li data-task="GRID_MEMORY">
                 <span>Grid Memory</span>
-                <input type="number" id="gridMemory" name="gridMemory" required min="0" placeholder="# Trials">
-                <textarea id="gridMemoryParams" name="gridMemoryParams" rows="4" cols="50"
+                <input type="number" id="GRID_MEMORY" name="gridMemory" required min="0" placeholder="# Trials"
+                    value="4">
+                <textarea id="GRID_MEMORY_PARAMS" name="GRID_MEMORY_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters"></textarea>
+            </li>
+            <li data-task="COLOR_DOTS">
+                <span>Color Dots</span>
+                <input type="number" id="COLOR_DOTS" name="colorDots" required min="0" placeholder="# Trials"
+                    value="5">
+                <textarea id="COLOR_DOTS_PARAMS" name="COLOR_DOTS_PARAMS" rows="4" cols="50"
+                    placeholder="Additional Parameters"></textarea>
+            </li>
+            <li data-task="COLOR_SHAPES">
+                <span>Color Shapes</span>
+                <input type="number" id="COLOR_SHAPES" name="COLOR_SHAPES" required min="0" placeholder="# Trials"
+                    value="12">
+                <textarea id="COLOR_SHAPES_PARAMS" name="COLOR_SHAPES_PARAMS" rows="4" cols="50"
+                    placeholder="Additional Parameters">number_of_different_colors_trials=6,shapes_presented_duration_ms=500</textarea>
             </li>
         </ul>
         <br>
@@ -209,19 +219,120 @@
             });
         });
 
+        function validateForm() {
+            // Get all task elements
+            const taskElements = document.querySelectorAll('#sortableTasks li');
+            const taskList = Array.from(taskElements); // Convert NodeList to Array
+
+            // Extract the trials and tasks
+            const taskOrder = taskList.map(el => el.dataset.task); // Task identifiers
+            const taskNumTrials = taskList.map(el => parseInt(el.querySelector('input').value, 10)); // Trial numbers
+            const taskNumTrialsZero = taskNumTrials.filter(trial => trial === 0); // Trials with zero
+
+            // Reorder tasks: move tasks with zero trials to the end
+            const reorderedTasks = taskList.sort((a, b) => {
+                const aTrials = parseInt(a.querySelector('input').value, 10);
+                const bTrials = parseInt(b.querySelector('input').value, 10);
+
+                // Tasks with zero trials go to the end
+                return aTrials === 0 ? 1 : bTrials === 0 ? -1 : 0;
+            });
+
+            // Check if the order has changed
+            const reorderedOrder = reorderedTasks.map(el => el.dataset.task); // New order of tasks
+            const originalOrder = taskOrder; // Original order of tasks
+
+            // If order has changed, update the DOM and notify the user
+            if (JSON.stringify(reorderedOrder) !== JSON.stringify(originalOrder)) {
+                // Update the DOM with reordered tasks
+                const sortableTasksContainer = document.querySelector('#sortableTasks');
+                sortableTasksContainer.innerHTML = ''; // Clear the current list
+                reorderedTasks.forEach(task => sortableTasksContainer.appendChild(task)); // Append reordered tasks
+
+                const zeroTrialTasks = reorderedTasks.filter(task => parseInt(task.querySelector('input').value, 10) === 0);
+
+                // Extract task names for the notification
+                const movedTaskNames = zeroTrialTasks.map(task => {
+                    const taskName = task.querySelector('span').textContent;
+                    return taskName || 'Unnamed Task';
+                });
+
+                // Alert the user that tasks with zero trials have been moved
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Tasks Reordered',
+                    html: `One or more tasks with 0 trials were moved to the bottom:<br><ul>${movedTaskNames.map(task => `<li>${task}</li>`).join('')}</ul>`,
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            var addParamsValid = true;
+
+            // make sure additional params is in the correct format (csv, key=value or key=value::type)
+            const additionalParams = document.querySelectorAll('textarea');
+            for (var i = 0; i < additionalParams.length; i++) {
+                var params = additionalParams[i].value;
+                if (params.length > 0) {
+                    var paramArray = params.split(',');
+                    for (var j = 0; j < paramArray.length; j++) {
+                        var param = paramArray[j];
+                        if (param.includes('::')) {
+                            var paramSplit = param.split('::');
+                            if (paramSplit.length != 2) {
+                                addParamsValid = false;
+                            }
+                        } else if (param.includes('=')) {
+                            var paramSplit = param.split('=');
+                            if (paramSplit.length != 2) {
+                                addParamsValid = false;
+                            }
+                        } else {
+                            addParamsValid = false;
+                        }
+                    }
+                }
+            }
+
+            if (!addParamsValid) {
+                // show swal error
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Additional Parameters',
+                    html: `Please ensure that additional parameters are formatted correctly.<br><br>Parameters should be comma-separated and follow the format: <span style='font-weight:bold;font-style: italic;'>key=value</span> or <span style='font-weight:bold;font-style: italic;'>key=value::type</span>.`,
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            return true;
+        }
+
         document.getElementById('taskForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
-            // Get the form data
-            const colorDots = document.getElementById('colorDots').value;
-            const colorShapes = document.getElementById('colorShapes').value;
-            const gridMemory = document.getElementById('gridMemory').value;
-            const symbolSearch = document.getElementById('symbolSearch').value;
+            var downloadLink = document.getElementById('downloadLink');
 
-            const colorDotsAddParams = document.getElementById('colorDotsParams').value;
-            const colorShapesAddParams = document.getElementById('colorShapesParams').value;
-            const gridMemoryAddParams = document.getElementById('gridMemoryParams').value;
-            const symbolSearchAddParams = document.getElementById('symbolSearchParams').value;
+            // remove link from downloadLink and hide it
+            downloadLink.href = '';
+            downloadLink.download = '';
+            downloadLink.textContent = '';
+            downloadLink.style.display = 'none';
+
+            // Validate form
+            if (!validateForm()) {
+                return;
+            }
+
+            // Get the form data
+            const colorDots = document.getElementById('COLOR_DOTS').value;
+            const colorShapes = document.getElementById('COLOR_SHAPES').value;
+            const gridMemory = document.getElementById('GRID_MEMORY').value;
+            const symbolSearch = document.getElementById('SYMBOL_SEARCH').value;
+
+            const colorDotsAddParams = document.getElementById('COLOR_DOTS_PARAMS').value;
+            const colorShapesAddParams = document.getElementById('COLOR_SHAPES_PARAMS').value;
+            const gridMemoryAddParams = document.getElementById('GRID_MEMORY_PARAMS').value;
+            const symbolSearchAddParams = document.getElementById('SYMBOL_SEARCH_PARAMS').value;
 
             var autoComplete = "FALSE";
             if (document.getElementById('autoNext').checked) {
@@ -235,42 +346,54 @@
 
             const language = document.getElementById('m2c2Language').value;
 
+            // build an object like an array with the task and the number of trials
+            var sessionActivities = [];
+            for (var i = 0; i < taskOrder.length; i++) {
+                var task = taskOrder[i];
+                var taskTrials = document.getElementById(task).value;
+                var taskParams = document.getElementById(task + "_PARAMS").value;
+                sessionActivities.push({
+                    "task": task,
+                    "trials": taskTrials,
+                    "params": taskParams
+                });
+            }
+
             // Generate the QSF
-            const qsf = generateQSF(colorDots, colorShapes, gridMemory, symbolSearch, language, taskOrderString, autoComplete, colorDotsAddParams, colorShapesAddParams, gridMemoryAddParams, symbolSearchAddParams);
+            const qsf = generateQSF(language, autoComplete, sessionActivities);
 
             // Create a download link
-            const downloadLink = document.getElementById('downloadLink');
             downloadLink.href = URL.createObjectURL(qsf);
             downloadLink.download = 'm2c2_qualtrics.qsf';
             downloadLink.textContent = 'Click here to download your Qualtrics QSF File';
             downloadLink.style.display = 'block';
         });
 
-        function generateQSF(colorDots, colorShapes, gridMemory, symbolSearch, language, taskOrderString, autoComplete, colorDotsAddParams, colorShapesAddParams, gridMemoryAddParams, symbolSearchAddParams) {
+        function generateQSF(language, autoComplete, sessionActivities) {
             const qsf =
             {
                 "SurveyEntry": {
-                    "SurveyID": "SV_3x8LALuT51B4Kk6",
+                    "SurveyID": "SV_1ImFvhvugBeA0dM",
                     "SurveyName": "M2C2",
                     "SurveyDescription": null,
                     "SurveyOwnerID": "UR_0ciZllifcla7X4F",
                     "SurveyBrandID": "pennstate",
                     "DivisionID": "DV_7VdU3bhgUIW23EE",
                     "SurveyLanguage": "EN",
-                    "SurveyActiveResponseSet": "RS_6KDr2VVKe76Y0WW",
+                    "SurveyActiveResponseSet": "RS_85MeUsdOVIMZX70",
                     "SurveyStatus": "Active",
                     "SurveyStartDate": "0000-00-00 00:00:00",
                     "SurveyExpirationDate": "0000-00-00 00:00:00",
-                    "SurveyCreationDate": "2024-09-27 08:21:14",
+                    "SurveyCreationDate": "2024-11-22 08:24:04",
                     "CreatorID": "UR_0ciZllifcla7X4F",
-                    "LastModified": "2024-09-27 13:35:45",
+                    "LastModified": "2024-11-25 11:50:46",
                     "LastAccessed": "0000-00-00 00:00:00",
-                    "LastActivated": "2024-09-27 08:40:24",
+                    "LastActivated": "2024-11-22 11:13:18",
                     "Deleted": null
                 },
                 "SurveyElements": [
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "BL",
                         "PrimaryAttribute": "Survey Blocks",
                         "SecondaryAttribute": null,
@@ -295,7 +418,7 @@
                         ]
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "FL",
                         "PrimaryAttribute": "Survey Flow",
                         "SecondaryAttribute": null,
@@ -306,43 +429,43 @@
                             "Flow": [
                                 {
                                     "Type": "EmbeddedData",
-                                    "FlowID": "FL_5",
+                                    "FlowID": "FL_4",
                                     "EmbeddedData": [
                                         {
-                                            "Description": "SYMBOL_SEARCH_NUM_TRIALS",
+                                            "Description": "M2C2_ASSESSMENT_00_NUM_TRIALS",
                                             "Type": "Custom",
-                                            "Field": "SYMBOL_SEARCH_NUM_TRIALS",
+                                            "Field": "M2C2_ASSESSMENT_00_NUM_TRIALS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": "1"
+                                            "Value": "20"
                                         },
                                         {
-                                            "Description": "COLOR_SHAPES_NUM_TRIALS",
+                                            "Description": "M2C2_ASSESSMENT_01_NUM_TRIALS",
                                             "Type": "Custom",
-                                            "Field": "COLOR_SHAPES_NUM_TRIALS",
+                                            "Field": "M2C2_ASSESSMENT_01_NUM_TRIALS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": "1"
+                                            "Value": "4"
                                         },
                                         {
-                                            "Description": "COLOR_DOTS_NUM_TRIALS",
+                                            "Description": "M2C2_ASSESSMENT_02_NUM_TRIALS",
                                             "Type": "Custom",
-                                            "Field": "COLOR_DOTS_NUM_TRIALS",
+                                            "Field": "M2C2_ASSESSMENT_02_NUM_TRIALS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": "1"
+                                            "Value": "5"
                                         },
                                         {
-                                            "Description": "GRID_MEMORY_NUM_TRIALS",
+                                            "Description": "M2C2_ASSESSMENT_03_NUM_TRIALS",
                                             "Type": "Custom",
-                                            "Field": "GRID_MEMORY_NUM_TRIALS",
+                                            "Field": "M2C2_ASSESSMENT_03_NUM_TRIALS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": "1"
+                                            "Value": "12"
                                         },
                                         {
                                             "Description": "M2C2_LANGUAGE",
@@ -354,83 +477,84 @@
                                             "Value": "en-US"
                                         },
                                         {
-                                            "Description": "M2C2_ORDER",
+                                            "Description": "M2C2_ASSESSMENT_ORDER",
                                             "Type": "Custom",
-                                            "Field": "M2C2_ORDER",
+                                            "Field": "M2C2_ASSESSMENT_ORDER",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": "SYMBOL_SEARCH,COLOR_DOTS,COLOR_SHAPES,GRID_MEMORY"
+                                            "Value": "SYMBOL_SEARCH,GRID_MEMORY,COLOR_DOTS,COLOR_SHAPES"
                                         },
                                         {
-                                            "Description": "AUTO_NEXT",
+                                            "Description": "M2C2_AUTO_ADVANCE",
                                             "Type": "Custom",
-                                            "Field": "AUTO_NEXT",
+                                            "Field": "M2C2_AUTO_ADVANCE",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
                                             "Value": "TRUE"
                                         },
                                         {
-                                            "Description": "SYMBOL_SEARCH_ADD_PARAMS",
+                                            "Description": "M2C2_ASSESSMENT_00_ADD_PARAMS",
                                             "Type": "Custom",
-                                            "Field": "SYMBOL_SEARCH_ADD_PARAMS",
+                                            "Field": "M2C2_ASSESSMENT_00_ADD_PARAMS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
                                             "Value": ""
                                         },
                                         {
-                                            "Description": "COLOR_SHAPES_ADD_PARAMS",
+                                            "Description": "M2C2_ASSESSMENT_01_ADD_PARAMS",
                                             "Type": "Custom",
-                                            "Field": "COLOR_SHAPES_ADD_PARAMS",
+                                            "Field": "M2C2_ASSESSMENT_01_ADD_PARAMS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
                                             "Value": ""
                                         },
                                         {
-                                            "Description": "COLOR_DOTS_ADD_PARAMS",
+                                            "Description": "M2C2_ASSESSMENT_02_ADD_PARAMS",
                                             "Type": "Custom",
-                                            "Field": "COLOR_DOTS_ADD_PARAMS",
+                                            "Field": "M2C2_ASSESSMENT_02_ADD_PARAMS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
                                             "Value": ""
                                         },
                                         {
-                                            "Description": "GRID_MEMORY_ADD_PARAMS",
+                                            "Description": "M2C2_ASSESSMENT_03_ADD_PARAMS",
                                             "Type": "Custom",
-                                            "Field": "GRID_MEMORY_ADD_PARAMS",
+                                            "Field": "M2C2_ASSESSMENT_03_ADD_PARAMS",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false,
-                                            "Value": ""
+                                            "Value": "number_of_different_colors_trials=6,shapes_presented_duration_ms=500"
+                                        },
+                                        {
+                                            "Description": "M2C2_DEBUG",
+                                            "Type": "Custom",
+                                            "Field": "M2C2_DEBUG",
+                                            "VariableType": "String",
+                                            "DataVisibility": [],
+                                            "AnalyzeText": false,
+                                            "Value": "TRUE"
                                         }
                                     ]
                                 },
                                 {
-                                    "Type": "EmbeddedData",
-                                    "FlowID": "FL_3",
-                                    "EmbeddedData": [
-                                        {
-                                            "Description": "SYMBOL_SEARCH_TRIAL_DATA_00",
-                                            "Type": "Recipient",
-                                            "Field": "SYMBOL_SEARCH_TRIAL_DATA_00",
-                                            "VariableType": "String",
-                                            "DataVisibility": [],
-                                            "AnalyzeText": false
-                                        }
-                                    ]
+                                    "Type": "Block",
+                                    "ID": "BL_em8om5Uhvv5QbFY",
+                                    "FlowID": "FL_2",
+                                    "Autofill": []
                                 },
                                 {
                                     "Type": "EmbeddedData",
-                                    "FlowID": "FL_4",
+                                    "FlowID": "FL_5",
                                     "EmbeddedData": [
                                         {
-                                            "Description": "COLOR_SHAPES_TRIAL_DATA_00",
+                                            "Description": "M2C2_ASSESSMENT_00_TRIAL_DATA_00",
                                             "Type": "Recipient",
-                                            "Field": "COLOR_SHAPES_TRIAL_DATA_00",
+                                            "Field": "M2C2_ASSESSMENT_00_TRIAL_DATA_00",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false
@@ -442,9 +566,9 @@
                                     "FlowID": "FL_6",
                                     "EmbeddedData": [
                                         {
-                                            "Description": "COLOR_DOTS_TRIAL_DATA_00",
+                                            "Description": "M2C2_ASSESSMENT_01_TRIAL_DATA_00",
                                             "Type": "Recipient",
-                                            "Field": "COLOR_DOTS_TRIAL_DATA_00",
+                                            "Field": "M2C2_ASSESSMENT_01_TRIAL_DATA_00",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false
@@ -456,9 +580,9 @@
                                     "FlowID": "FL_7",
                                     "EmbeddedData": [
                                         {
-                                            "Description": "GRID_MEMORY_TRIAL_DATA_00",
+                                            "Description": "M2C2_ASSESSMENT_02_TRIAL_DATA_00",
                                             "Type": "Recipient",
-                                            "Field": "GRID_MEMORY_TRIAL_DATA_00",
+                                            "Field": "M2C2_ASSESSMENT_02_TRIAL_DATA_00",
                                             "VariableType": "String",
                                             "DataVisibility": [],
                                             "AnalyzeText": false
@@ -466,10 +590,18 @@
                                     ]
                                 },
                                 {
-                                    "Type": "Block",
-                                    "ID": "BL_em8om5Uhvv5QbFY",
-                                    "FlowID": "FL_2",
-                                    "Autofill": []
+                                    "Type": "EmbeddedData",
+                                    "FlowID": "FL_8",
+                                    "EmbeddedData": [
+                                        {
+                                            "Description": "M2C2_ASSESSMENT_03_TRIAL_DATA_00",
+                                            "Type": "Recipient",
+                                            "Field": "M2C2_ASSESSMENT_03_TRIAL_DATA_00",
+                                            "VariableType": "String",
+                                            "DataVisibility": [],
+                                            "AnalyzeText": false
+                                        }
+                                    ]
                                 }
                             ],
                             "Properties": {
@@ -478,18 +610,18 @@
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "PL",
                         "PrimaryAttribute": "Preview Link",
                         "SecondaryAttribute": null,
                         "TertiaryAttribute": null,
                         "Payload": {
                             "PreviewType": "Brand",
-                            "PreviewID": "e91fce4b-44e2-4ebc-b613-c5fcd03074b0"
+                            "PreviewID": "864b3b0d-c643-475a-bead-2030a1747fed"
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "SO",
                         "PrimaryAttribute": "Survey Options",
                         "SecondaryAttribute": null,
@@ -522,12 +654,12 @@
                             "SurveyMetaDescription": "The most powerful, simple and trusted way to gather experience data. Start your journey to experience management and try a free account today.",
                             "CustomStyles": [],
                             "headerMid": "",
-                            "SurveyName": "M2C2 - CDN - Symbol Search",
-                            "ProtectSelectionIds": true
+                            "ProtectSelectionIds": true,
+                            "SurveyName": "M2C2"
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "SCO",
                         "PrimaryAttribute": "Scoring",
                         "SecondaryAttribute": null,
@@ -543,7 +675,7 @@
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "PROJ",
                         "PrimaryAttribute": "CORE",
                         "SecondaryAttribute": null,
@@ -554,7 +686,7 @@
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "STAT",
                         "PrimaryAttribute": "Survey Statistics",
                         "SecondaryAttribute": null,
@@ -565,7 +697,7 @@
                         }
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "QC",
                         "PrimaryAttribute": "Survey Question Count",
                         "SecondaryAttribute": "1",
@@ -573,18 +705,18 @@
                         "Payload": null
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "RS",
-                        "PrimaryAttribute": "RS_6KDr2VVKe76Y0WW",
+                        "PrimaryAttribute": "RS_85MeUsdOVIMZX70",
                         "SecondaryAttribute": "Default Response Set",
                         "TertiaryAttribute": null,
                         "Payload": null
                     },
                     {
-                        "SurveyID": "SV_3x8LALuT51B4Kk6",
+                        "SurveyID": "SV_1ImFvhvugBeA0dM",
                         "Element": "SQ",
                         "PrimaryAttribute": "QID1",
-                        "SecondaryAttribute": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not modify Survey Flow.",
+                        "SecondaryAttribute": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not mo...",
                         "TertiaryAttribute": null,
                         "Payload": {
                             "QuestionText": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not modify Survey Flow.",
@@ -600,7 +732,7 @@
                             "Configuration": {
                                 "QuestionDescriptionOption": "UseText"
                             },
-                            "QuestionDescription": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not modify Survey Flow.",
+                            "QuestionDescription": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not mo...",
                             "ChoiceOrder": [],
                             "Validation": {
                                 "Settings": {
@@ -611,24 +743,11 @@
                             "Language": [],
                             "NextChoiceId": 4,
                             "NextAnswerId": 1,
-                            "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () {\n    jQuery(\"#\" + this.questionId).hide();\n\n    console.log(\"Starting M2C2Kit routine...\");\n\n    \/\/ Add a container for the M2C2Kit\n    jQuery(\"body\").append('<div id=\"m2c2kit-container\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: white;\"><\/div>');\n    jQuery(\"#m2c2kit-container\").append('<div id=\"m2c2kit\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;\"><\/div>');\n\n    \/\/ Load the module shims\n    var esModuleShims = document.createElement('script');\n    esModuleShims.src = 'https:\/\/ga.jspm.io\/npm:es-module-shims@1.10.0\/dist\/es-module-shims.js';\n    document.head.appendChild(esModuleShims);\n\n    \/\/ Load the import map\n    var importMap = document.createElement('script');\n    importMap.type = 'importmap';\n    importMap.text = JSON.stringify({\n        imports: {\n            \"@m2c2kit\/core\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/core@0.3.24\/dist\/index.min.js\",\n            \"@m2c2kit\/session\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/session@0.3.6\/dist\/index.min.js\",\n            \"@m2c2kit\/addons\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/addons@0.3.23\/dist\/index.min.js\",\n            \"@m2c2kit\/physics\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/physics@0.1.11\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-color-dots\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-dots@0.8.22\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-color-shapes\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-shapes@0.8.22\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-grid-memory\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-grid-memory@0.8.22\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-symbol-search\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-symbol-search@0.8.22\/dist\/index.min.js\"\n        }\n    });\n    document.head.appendChild(importMap);\n\n    \/\/ Load your main JavaScript module after the page is fully loaded\n    var script = document.createElement('script');\n    script.type = 'module';\n    script.text = `\n        import { ActivityType } from \"@m2c2kit\/core\";\n        import { Session } from \"@m2c2kit\/session\";\n        import { ColorDots } from \"@m2c2kit\/assessment-color-dots\";\n        import { ColorShapes } from \"@m2c2kit\/assessment-color-shapes\";\n        import { GridMemory } from \"@m2c2kit\/assessment-grid-memory\";\n        import { SymbolSearch } from \"@m2c2kit\/assessment-symbol-search\";\n\n        const colorDotsNumTrials = ` + Qualtrics.SurveyEngine.getEmbeddedData(\"COLOR_DOTS_NUM_TRIALS\") + `;\n        const colorShapesNumTrials = ` + Qualtrics.SurveyEngine.getEmbeddedData(\"COLOR_SHAPES_NUM_TRIALS\") + `;\n        const gridMemoryNumTrials = ` + Qualtrics.SurveyEngine.getEmbeddedData(\"GRID_MEMORY_NUM_TRIALS\") + `;\n        const symbolSearchNumTrials = ` + Qualtrics.SurveyEngine.getEmbeddedData(\"SYMBOL_SEARCH_NUM_TRIALS\") + `;\n        const m2c2Language = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_LANGUAGE\") + `';\n        const autoNext = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"AUTO_NEXT\") + `';\n        const m2c2Order = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_ORDER\") + `';\n        const colorDotsAddParams = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"COLOR_DOTS_ADD_PARAMS\") + `';\n        const colorShapesAddParams = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"COLOR_SHAPES_ADD_PARAMS\") + `';\n        const gridMemoryAddParams = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"GRID_MEMORY_ADD_PARAMS\") + `';\n        const symbolSearchAddParams = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"SYMBOL_SEARCH_ADD_PARAMS\") + `';\n\n        \/\/ split apart the order string\n        const m2c2OrderArray = m2c2Order.split(',');\n\n        \/\/ check that the order string is valid\n        if ((m2c2OrderArray.length !== 4) || (m2c2OrderArray.length !== new Set(m2c2OrderArray).size)) {\n            console.error('Invalid order string.');\n            alert('Invalid order string.');\n\t\t}\n\n        const activities = [];\n\n        function buildParams(numTrials, language, addParamsString) {\n            var params = { number_of_trials: numTrials, locale: language };\n            console.log(\"Additional params: \" + addParamsString);\n            addParamsString = addParamsString.trim();\n            if (addParamsString !== \"\") {\n                var additionalParams = addParamsString.split(',').filter(line => line.trim() !== '');\n                additionalParams.forEach(paramLine => {\n                    let [key, value] = paramLine.split(':').map(part => part.trim());\n                    params[key] = value;\n                });\n            }\n            return params;\n        }\n\n        for (let i = 0; i < m2c2OrderArray.length; i++) {\n            if ((m2c2OrderArray[i] === 'SYMBOL_SEARCH') && (symbolSearchNumTrials > 0)) {\n                const symbolSearch = new SymbolSearch();\n                symbolSearch.setParameters(buildParams(symbolSearchNumTrials, m2c2Language, symbolSearchAddParams));\n                activities.push(symbolSearch);\n            } else if ((m2c2OrderArray[i] === 'COLOR_DOTS') && (colorDotsNumTrials > 0)) {\n                const colorDots = new ColorDots();\n                colorDots.setParameters(buildParams(colorDotsNumTrials, m2c2Language, colorDotsAddParams));\n                activities.push(colorDots);\n            } else if ((m2c2OrderArray[i] === 'COLOR_SHAPES') && (colorShapesNumTrials > 0)) {\n                const colorShapes = new ColorShapes();\n                colorShapes.setParameters(buildParams(colorShapesNumTrials, m2c2Language, colorShapesAddParams));\n                activities.push(colorShapes);\n            } else if ((m2c2OrderArray[i] === 'GRID_MEMORY') && (gridMemoryNumTrials > 0)) {\n                const gridMemory = new GridMemory();\n                gridMemory.setParameters(buildParams(gridMemoryNumTrials, m2c2Language, gridMemoryAddParams));\n                activities.push(gridMemory);\n            }\n        }\n\n        const session = new Session({ activities: activities });\n\n        session.onActivityData((ev) => {\n            console.log('Activity Data:', ev);\n\n            var lastTrial = ev.data.trials[ev.data.trials.length - 1];\n            console.log(\"Last trial: \", lastTrial);\n            var trialNum = lastTrial.trial_index;\n            console.log(\"Trial index: \", trialNum);\n            trialNum = String(trialNum).padStart(2, '0');\n\n            \/\/ Store data into embedded variables\n            if (lastTrial.activity_id === \"color-dots\") {\n                Qualtrics.SurveyEngine.setEmbeddedData(\"COLOR_DOTS_TRIAL_DATA_\" + trialNum, JSON.stringify(lastTrial));\n            } else if (lastTrial.activity_id === \"color-shapes\") {\n                Qualtrics.SurveyEngine.setEmbeddedData(\"COLOR_SHAPES_TRIAL_DATA_\" + trialNum, JSON.stringify(lastTrial));\n            } else if (lastTrial.activity_id === \"grid-memory\") {\n                Qualtrics.SurveyEngine.setEmbeddedData(\"GRID_MEMORY_TRIAL_DATA_\" + trialNum, JSON.stringify(lastTrial));\n            } else if (lastTrial.activity_id === \"symbol-search\") {\n                Qualtrics.SurveyEngine.setEmbeddedData(\"SYMBOL_SEARCH_TRIAL_DATA_\" + trialNum, JSON.stringify(lastTrial));\n            }\n        });\n\n        session.onEnd((ev) => {\n            console.log(\"End:\", ev);\n            console.log(\"Ending M2C2Kit routine...\");\n\n            if ((autoNext === true) || (autoNext === \"TRUE\")) {\n                jQuery(\".NextButton\").click();\n                jQuery(\"#Questions\").hide();\n                jQuery(\"#Buttons\").hide();\n            }\n\n            jQuery(\"#m2c2kit-container\").hide();\n        });\n\n        window.m2c2kitSession = session;\n        session.initialize();\n    `;\n    document.body.appendChild(script);\n});"
-						}
+                            "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () {\n    jQuery(\"#\" + this.questionId).hide();\n\n    console.log(\"Starting M2C2Kit routine...\");\n\n    \/\/ Add a container for the M2C2Kit\n    jQuery(\"body\").append('<div id=\"m2c2kit-container\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: white;\"><\/div>');\n    jQuery(\"#m2c2kit-container\").append('<div id=\"m2c2kit\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;\"><\/div>');\n\n    \/\/ Load the module shims\n    var esModuleShims = document.createElement('script');\n    esModuleShims.src = 'https:\/\/ga.jspm.io\/npm:es-module-shims@1.10.1\/dist\/es-module-shims.js';\n    document.head.appendChild(esModuleShims);\n\n    \/\/ Load the import map\n    var importMap = document.createElement('script');\n    importMap.type = 'importmap';\n    importMap.text = JSON.stringify({\n        imports: {\n            \"@m2c2kit\/core\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/core@0.3.26\/dist\/index.min.js\",\n            \"@m2c2kit\/session\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/session@0.3.8\/dist\/index.min.js\",\n            \"@m2c2kit\/addons\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/addons@0.3.25\/dist\/index.min.js\",\n            \"@m2c2kit\/physics\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/physics@0.1.13\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-color-dots\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-dots@0.8.24\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-color-shapes\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-shapes@0.8.24\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-grid-memory\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-grid-memory@0.8.24\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-symbol-search\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-symbol-search@0.8.24\/dist\/index.min.js\"\n        }\n    });\n    document.head.appendChild(importMap);\n\n    \/\/ Load your main JavaScript module after the page is fully loaded\n    var script = document.createElement('script');\n    script.type = 'module';\n    script.text = `\n        import { ActivityType } from \"@m2c2kit\/core\";\n        import { Session } from \"@m2c2kit\/session\";\n        import { ColorDots } from \"@m2c2kit\/assessment-color-dots\";\n        import { ColorShapes } from \"@m2c2kit\/assessment-color-shapes\";\n        import { GridMemory } from \"@m2c2kit\/assessment-grid-memory\";\n        import { SymbolSearch } from \"@m2c2kit\/assessment-symbol-search\";\n\t\t\n        const m2c2Order = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_ASSESSMENT_ORDER\") + `';\n        const m2c2Language = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_LANGUAGE\") + `';\n        const m2c2AutoAdvance = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_AUTO_ADVANCE\") + `' === \"TRUE\";\n\t\tconst m2c2Debug = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_DEBUG\") + `' === \"TRUE\";\n\t\t\n\t\tif (m2c2Debug) {\n\t\t\tconsole.log(\"M2C2 Order: \" + m2c2Order);\n\t\t\tconsole.log(\"M2C2 Language: \" + m2c2Language);\n\t\t\tconsole.log(\"M2C2 Auto Advance: \" + m2c2AutoAdvance);\n\t\t\tconsole.log(\"M2C2 Debug: \" + m2c2Debug);\t\t\t\n\t\t}\n\t\t\n\t\t\/\/ Get order of assessments and handle each dynamically\n        const m2c2OrderArray = m2c2Order.split(',');\n\t\t\n\t\t\/\/ Check that order is valid\n        if ((m2c2OrderArray.length !== 4) || (m2c2OrderArray.length !== new Set(m2c2OrderArray).size)) {\n            console.error('Invalid order string.');\n            alert('Invalid order string.');\n\t\t}\n\t\t\n        const activities = [];\n\n        function buildParams(assessmentIndex, numTrials, language, addParamsString) {\n            var params = { number_of_trials: numTrials, locale: language };\n\t\t\tif (m2c2Debug) {\n            \tconsole.log(\"Additional params: \" + addParamsString);\n\t\t\t}\n            addParamsString = addParamsString.trim();\n            if (addParamsString !== \"\") {\n                var additionalParams = addParamsString.split(',').filter(line => line.trim() !== '');\n                additionalParams.forEach(paramLine => {\n\t\t\t\t\tconst parts = paramLine.split('=').map(part => part.trim());\n\t\t\t\t\tif (parts.length === 2) {\n\t\t\t\t\t\tconst [key, value] = parts;\n\t\t\t\t\t\tparams[key] = value;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconsole.error('Invalid parameter format:', paramLine);\n\t\t\t\t\t}\n                });\n            }\n            return params;\n        }\n\t\t\n\t\t\/\/ Loop through the order and dynamically build activities based on the order\n        for (let i = 0; i < m2c2OrderArray.length; i++) {\n            const assessment = m2c2OrderArray[i];\n            const assessmentIndex = \"M2C2_ASSESSMENT_\" + String(i).padStart(2, '0');\n            const numTrials = parseInt(Qualtrics.SurveyEngine.getEmbeddedData(assessmentIndex + \"_NUM_TRIALS\")) || 0;\n            const addParams = Qualtrics.SurveyEngine.getEmbeddedData(assessmentIndex + \"_ADD_PARAMS\") || \"\";\n\n            if (assessment === 'SYMBOL_SEARCH' && numTrials > 0) {\n                const symbolSearch = new SymbolSearch();\n                symbolSearch.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n                activities.push(symbolSearch);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Symbol Search Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"')\");\n\t\t\t\t}\n            } else if (assessment === 'COLOR_DOTS' && numTrials > 0) {\n                const colorDots = new ColorDots();\n                colorDots.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n                activities.push(colorDots);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Color Dots Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"')\");\n\t\t\t\t}\n            } else if (assessment === 'COLOR_SHAPES' && numTrials > 0) {\n                const colorShapes = new ColorShapes();\n                colorShapes.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n                activities.push(colorShapes);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Color Shapes Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"')\");\n\t\t\t\t}\n            } else if (assessment === 'GRID_MEMORY' && numTrials > 0) {\n                const gridMemory = new GridMemory();\n                gridMemory.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n                activities.push(gridMemory);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Grid Memory Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"')\");\n\t\t\t\t}\n            }\n        }\n\n        const session = new Session({ activities: activities });\n\n        session.onActivityData((ev) => {\n\n            var lastTrial = ev.data.trials[ev.data.trials.length - 1];\n\t\t\t\n            var trialIndex = String(lastTrial.trial_index).padStart(2, '0');\n\t\t\t\n\t\t\tvar assessmentIndex = String(session.options.activities.indexOf(session.currentActivity)).padStart(2, '0');\n\t\t\t\n\t\t\tif (m2c2Debug) {\n            \tconsole.log('Activity Data:', ev);\n\t\t\t\tconsole.log(\"Last trial: \", lastTrial);\n\t\t\t\tconsole.log(\"Trial index: \", trialIndex);\n\t\t\t\tconsole.log(\"Activity index: \", assessmentIndex);\n\t\t\t}\n\t\t\t\n\t\t\tQualtrics.SurveyEngine.setEmbeddedData(\"M2C2_ASSESSMENT_\" + assessmentIndex + \"_TRIAL_DATA_\" + trialIndex, JSON.stringify(lastTrial));\n        });\n\n        session.onEnd((ev) => {\n\t\t\tif (m2c2Debug) {\n            \tconsole.log(\"Ending M2C2Kit:\", ev);\n\t\t\t}\n\n            if (m2c2AutoAdvance) {\n                jQuery(\".NextButton\").click();\n                jQuery(\"#Questions\").hide();\n                jQuery(\"#Buttons\").hide();\n            }\n\n            jQuery(\"#m2c2kit-container\").hide();\n        });\n\n        window.m2c2kitSession = session;\n        session.initialize();\n    `;\n    document.body.appendChild(script);\n});"
+                        }
                     }
                 ]
             };
-
-            // modify fields: SYMBOL_SEARCH_NUM_TRIALS, COLOR_SHAPES_NUM_TRIALS, COLOR_DOTS_NUM_TRIALS, GRID_MEMORY_NUM_TRIALS with the values from the form
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[0].Value = symbolSearch;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[1].Value = colorShapes;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[2].Value = colorDots;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[3].Value = gridMemory;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[4].Value = language;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[5].Value = taskOrderString;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[6].Value = autoComplete;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[7].Value = symbolSearchAddParams;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[8].Value = colorShapesAddParams;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[9].Value = colorDotsAddParams;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[10].Value = gridMemoryAddParams;
 
             // Function to update EmbeddedData for a given flow ID based on the number of trials
             function updateFlow(flowID, trialCount, descriptionPrefix) {
@@ -651,7 +770,7 @@
                         "EmbeddedData": []
                     };
                     qsf.SurveyElements[1].Payload.Flow.push(flow);
-                    console.log("Adding new flow for", flowID);
+                    //console.log("Adding new flow for", flowID);
                 }
 
                 // Loop to add trial data entries based on the number of trials
@@ -669,11 +788,28 @@
                 }
             }
 
-            // Update flows for each type of data
-            updateFlow("FL_3", symbolSearch, "SYMBOL_SEARCH_TRIAL_DATA");
-            updateFlow("FL_4", colorShapes, "COLOR_SHAPES_TRIAL_DATA");
-            updateFlow("FL_6", colorDots, "COLOR_DOTS_TRIAL_DATA");
-            updateFlow("FL_7", gridMemory, "GRID_MEMORY_TRIAL_DATA");
+            // modify fields: SYMBOL_SEARCH_NUM_TRIALS, COLOR_SHAPES_NUM_TRIALS, COLOR_DOTS_NUM_TRIALS, GRID_MEMORY_NUM_TRIALS with the values from the form
+
+            var taskOrderString = "";
+            for (let i = 0; i < 4; i++) {
+                let numTrials = parseInt(sessionActivities[i].trials);
+                let addParams = sessionActivities[i].params;
+
+                qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[i].Value = numTrials;
+                qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[i+7].Value = addParams;
+
+                if (i < 3) {
+                    taskOrderString += sessionActivities[i].task + ",";
+                } else {
+                    taskOrderString += sessionActivities[i].task;
+                }
+
+                updateFlow("FL_" + (i + 5), numTrials, "M2C2_ASSESSMENT_0" + i + "_TRIAL_DATA");
+            }
+
+            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[4].Value = language;
+            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[5].Value = taskOrderString;
+            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[6].Value = autoComplete;
 
             return new Blob([JSON.stringify(qsf)], { type: 'application/json' });
         }
