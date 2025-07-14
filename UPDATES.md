@@ -51,6 +51,8 @@ The **QSF Generator** is a simple, client-side HTML tool designed to generate Qu
 
 Using ```git clone https://github.com/m2c2-project/qualtrics-qsf-generator.git``` or Download ZIP - be sure to pull your desired branch!
 
+Please be sure to update the QSF generator version so that we can easily track which version of the generator was used inside the data.
+
 ---
 
 ## 🌍 Adding/Updating Languages
