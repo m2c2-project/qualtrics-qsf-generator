@@ -1,3 +1,43 @@
+# Qualtrics Update: New Survey Taking Experience / Simple Layout
+
+We’ve identified an issue with the new Qualtrics **“Survey Taking Experience / Simple Layout”** option that impacts **M2C2** functionality.
+
+---
+
+## Problem
+Enabling the new survey layout deprecates the JavaScript functions **M2C2** uses to get/save embedded data.  
+Qualtrics now requires embedded variables to be prefixed with `__js_`.  
+This also applies to URL parameters.
+
+---
+
+## Impact
+- **M2C2 tasks may not function properly** if the new layout is enabled.  
+- This issue only occurs when the new survey experience is turned on.  
+- The **legacy survey layout is not affected**.
+
+---
+
+## Workaround
+- **Do not enable** the *New Survey Taking Experience / Simple Layout* in Qualtrics.  
+- If already enabled, you can **revert to the legacy survey experience**.
+
+---
+
+## Next Steps
+We are testing possible fixes to ensure compatibility with both layouts.  
+However, since **Qualtrics announced this new layout will become the default for many brands starting June 30, 2025**, this may eventually be unavoidable.
+
+---
+
+## Reference
+- [Qualtrics Documentation – Simple Layout](#) *(https://www.qualtrics.com/support/survey-platform/survey-module/look-feel/simple-layout/)*
+
+---
+
+✅ We will update here once a tested solution is available.
+
+
 # Overview
 
 [`m2c2kit`](https://m2c2-project.github.io/m2c2kit/) is a Typescript/Javascript framework for rapid-creation and iteration of cognitive assessments.
