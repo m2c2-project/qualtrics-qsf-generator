@@ -69,6 +69,12 @@
             margin-top: 10px;
         }
 
+        .task-list li label {
+            width: 100px;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
         .task-list li textarea {
             width: 300px;
             margin-left: 20px;
@@ -77,6 +83,25 @@
 
         .task-list li span {
             width: 150px;
+        }
+
+        .task-name-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 150px;
+        }
+
+        .version-display {
+            font-size: 0.75em;
+            color: #666;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .version-number {
+            font-weight: bold;
+            color: #444;
         }
 
         .sortable-ghost {
@@ -135,63 +160,113 @@
 
         <h3>Current Cognitive Activities</h3>
 
-        <p><b><u>Symbol Search</u></b><br>
-        number_of_trials = 20</p>
+        <h4 style="font-weight:bold; text-decoration:underline; margin-bottom:5px">Symbol Search</h4>
+        <ul style="margin-top:5px;">
+            <li>
+                number_of_trials = 20
+            </li>
+        </ul>
 
-        <p><b><u>Grid Memory</u></b><br>
-        number_of_trials = 4</p>
+        <h4 style="font-weight:bold; text-decoration:underline; margin-bottom:5px">Grid Memory</h4>
+        <ul style="margin-top:5px;">
+            <li>
+                number_of_trials = 4
+            </li>
+        </ul>
 
-        <p><b><u>Color Dots</u></b><br>
-        number_of_trials = 5</p>
+        <h4 style="font-weight:bold; text-decoration:underline; margin-bottom:5px">Color Dots</h4>
+        <ul style="margin-top:5px;">
+            <li>
+                number_of_trials = 5
+            </li>
+        </ul>
 
-        <p><b><u>Color Shapes</u></b><br>
-        number_of_trials = 12<br>
-        number_of_different_colors_trials = 6<br>
-        shapes_presented_duration_ms = 500</p>
+        <h4 style="font-weight:bold; text-decoration:underline; margin-bottom:5px">Color Shapes</h4>
+        <ul style="margin-top:5px;">
+            <li>
+                number_of_trials = 12
+                <ul style="margin-top:5px">
+                    <li>
+                        The suggested default number of trials is 12. The number of trials <b>MUST</b> be an <b>EVEN number</b>.
+                    </li>
 
-        <ul>
-    <li>
-        <p>The suggested default number of trials is 12. The number of trials <b>MUST</b> be an <b>EVEN number</b>.<br><br>
-        <b>IMPORTANT:</b> The <b>number_of_different_colors_trials</b> should be ½ the total number of trials (e.g., if <b>number_of_trials = 20</b>, then the <b>number_of_different_colors_trials = 10</b>). Please make sure to also update this parameter.</p>
-    </li>
-    <li>
-        <p>The <b>number_of_different_colors_trials</b> parameter is the number of trials where the shapes will change colors from the study phase to the test phase, where the correct answer chosen would be “Different.” The suggested default is 6 for this parameter to coincide with ½ of the number of default trials, which is 12.<br><br>
-        <b>IMPORTANT:</b> The <b>number_of_different_colors_trials</b> should be ½ the total number of trials (e.g., if <b>number_of_trials = 20</b>, then the <b>number_of_different_colors_trials = 10</b>).</p>
-    </li>
-    <li>
-        <p>The <b>shapes_presented_duration_ms</b> parameter is how long the shapes are shown in milliseconds. The default is 500 ms, but for older adults with suspected impairments or elevated dementia risk, it is suggested to make this 2000 ms.</p>
-    </li>
-</ul>
+                </ul>
+            </li>
+            <li>
+                number_of_different_colors_trials = 6
+                <ul style="margin-top:5px">
+                    <li>
+                        The <b>number_of_different_colors_trials</b> parameter is the number of trials where the shapes will change colors from the study phase to the test phase, where the correct answer chosen would be “Different.” The suggested default is 6 for this parameter to coincide with ½ of the number of default trials, which is 12.
+                    </li>
+                    <li>
+                        <b>IMPORTANT:</b> The <b>number_of_different_colors_trials</b> should be ½ the total number of trials (e.g., if <b>number_of_trials = 20</b>, then the <b>number_of_different_colors_trials = 10</b>). Please make sure to also update this parameter.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                shapes_presented_duration_ms = 500
+                <ul style="margin-top:5px">
+                    <li>
+                        The <b>shapes_presented_duration_ms</b> parameter is how long the shapes are shown in milliseconds. The default is 500 ms, but for older adults with suspected impairments or elevated dementia risk, it is suggested to make this 2000 ms.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
         <hr>
     </div>
 
     <form id="taskForm">
         <ul id="sortableTasks" class="task-list">
             <li data-task="SYMBOL_SEARCH">
-                <span>Symbol Search</span>
-                <input type="number" id="SYMBOL_SEARCH" name="symbolSearch" required min="0" placeholder="# Trials"
-                    value="20">
+                <div class="task-name-container">
+                    <span>Symbol Search</span>
+                    <div class="version-display" data-version-for="SYMBOL_SEARCH">Version: <span class="version-number">...</span></div>
+                </div>
+                <div>
+                    <input type="number" id="SYMBOL_SEARCH" name="symbolSearch" required min="0" placeholder="# Trials"
+                        value="20">
+                    <label for="SYMBOL_SEARCH" style="font-size: 0.75em; color: #666; margin-top: 2px;"># Trials</label>
+                </div>
                 <textarea id="SYMBOL_SEARCH_PARAMS" name="SYMBOL_SEARCH_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters"></textarea>
             </li>
             <li data-task="GRID_MEMORY">
-                <span>Grid Memory</span>
-                <input type="number" id="GRID_MEMORY" name="gridMemory" required min="0" placeholder="# Trials"
-                    value="4">
+                <div class="task-name-container">
+                    <span>Grid Memory</span>
+                    <div class="version-display" data-version-for="GRID_MEMORY">Version: <span class="version-number">...</span></div>
+                </div>
+                <div>
+                    <input type="number" id="GRID_MEMORY" name="gridMemory" required min="0" placeholder="# Trials"
+                        value="4">
+                    <label for="GRID_MEMORY" style="font-size: 0.75em; color: #666; margin-top: 2px;"># Trials</label>
+                </div>
                 <textarea id="GRID_MEMORY_PARAMS" name="GRID_MEMORY_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters"></textarea>
             </li>
             <li data-task="COLOR_DOTS">
-                <span>Color Dots</span>
-                <input type="number" id="COLOR_DOTS" name="colorDots" required min="0" placeholder="# Trials"
-                    value="5">
+                <div class="task-name-container">
+                    <span>Color Dots</span>
+                    <div class="version-display" data-version-for="COLOR_DOTS">Version: <span class="version-number">...</span></div>
+                </div>
+                <div>
+                    <input type="number" id="COLOR_DOTS" name="colorDots" required min="0" placeholder="# Trials"
+                        value="5">
+                    <label for="COLOR_DOTS" style="font-size: 0.75em; color: #666; margin-top: 2px;"># Trials</label>
+                </div>
                 <textarea id="COLOR_DOTS_PARAMS" name="COLOR_DOTS_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters"></textarea>
             </li>
             <li data-task="COLOR_SHAPES">
-                <span>Color Shapes</span>
-                <input type="number" id="COLOR_SHAPES" name="COLOR_SHAPES" required min="0" placeholder="# Trials"
-                    value="12">
+                <div class="task-name-container">
+                    <span>Color Shapes</span>
+                    <div class="version-display" data-version-for="COLOR_SHAPES">Version: <span class="version-number">...</span></div>
+                </div>
+                <div>
+                    <input type="number" id="COLOR_SHAPES" name="COLOR_SHAPES" required min="0" placeholder="# Trials"
+                        value="12">
+                    <label for="COLOR_SHAPES" style="font-size: 0.75em; color: #666; margin-top: 2px;"># Trials</label>
+                </div>
                 <textarea id="COLOR_SHAPES_PARAMS" name="COLOR_SHAPES_PARAMS" rows="4" cols="50"
                     placeholder="Additional Parameters">number_of_different_colors_trials=6,shapes_presented_duration_ms=500</textarea>
             </li>
@@ -201,7 +276,7 @@
         <div class="inline-input-container">
             <label for="m2c2QSFGenVersion">QSF Generator Version</label>
             &nbsp;
-            <input type="text" id="m2c2QSFGenVersion" name="m2c2QSFGenVersion" required disabled value="2025_07_16">
+            <input type="text" id="m2c2QSFGenVersion" name="m2c2QSFGenVersion" required disabled value="2026_03_25">
         </div>
         <div class="inline-input-container">
             <label for="studyId">Study ID</label>
@@ -234,12 +309,113 @@
     <a id="downloadLink" style="display:none">Download the Qualtrics QSF File</a>
 
     <script>
+        // ============================================================
+        // M2C2 LIBRARY VERSION CONFIGURATION
+        // ============================================================
+        // Centralized configuration for all m2c2kit library versions
+        // Edit these version numbers to update libraries across all assessments
+        const M2C2_LIBRARIES = {
+            "SYMBOL_SEARCH": {
+                "@m2c2kit/core": "https://cdn.jsdelivr.net/npm/@m2c2kit/core@0.3.36/dist/index.min.js",
+                "@m2c2kit/session": "https://cdn.jsdelivr.net/npm/@m2c2kit/session@0.3.18/dist/index.min.js",
+                "@m2c2kit/addons": "https://cdn.jsdelivr.net/npm/@m2c2kit/addons@0.3.35/dist/index.min.js",
+                "@m2c2kit/physics": "https://cdn.jsdelivr.net/npm/@m2c2kit/physics@0.1.23/dist/index.min.js",
+                "@m2c2kit/data-calc": "https://cdn.jsdelivr.net/npm/@m2c2kit/data-calc@0.8.7/dist/index.min.js",
+                "@m2c2kit/assessment-symbol-search": "https://cdn.jsdelivr.net/npm/@m2c2kit/assessment-symbol-search@0.8.34/dist/index.min.js"
+            },
+            "COLOR_DOTS": {
+                "@m2c2kit/core": "https://cdn.jsdelivr.net/npm/@m2c2kit/core@0.3.36/dist/index.min.js",
+                "@m2c2kit/session": "https://cdn.jsdelivr.net/npm/@m2c2kit/session@0.3.18/dist/index.min.js",
+                "@m2c2kit/addons": "https://cdn.jsdelivr.net/npm/@m2c2kit/addons@0.3.35/dist/index.min.js",
+                "@m2c2kit/physics": "https://cdn.jsdelivr.net/npm/@m2c2kit/physics@0.1.23/dist/index.min.js",
+                "@m2c2kit/data-calc": "https://cdn.jsdelivr.net/npm/@m2c2kit/data-calc@0.8.7/dist/index.min.js",
+                "@m2c2kit/assessment-color-dots": "https://cdn.jsdelivr.net/npm/@m2c2kit/assessment-color-dots@0.8.34/dist/index.min.js"
+            },
+            "COLOR_SHAPES": {
+                "@m2c2kit/core": "https://cdn.jsdelivr.net/npm/@m2c2kit/core@0.3.36/dist/index.min.js",
+                "@m2c2kit/session": "https://cdn.jsdelivr.net/npm/@m2c2kit/session@0.3.18/dist/index.min.js",
+                "@m2c2kit/addons": "https://cdn.jsdelivr.net/npm/@m2c2kit/addons@0.3.35/dist/index.min.js",
+                "@m2c2kit/physics": "https://cdn.jsdelivr.net/npm/@m2c2kit/physics@0.1.23/dist/index.min.js",
+                "@m2c2kit/data-calc": "https://cdn.jsdelivr.net/npm/@m2c2kit/data-calc@0.8.7/dist/index.min.js",
+                "@m2c2kit/assessment-color-shapes": "https://cdn.jsdelivr.net/npm/@m2c2kit/assessment-color-shapes@0.8.34/dist/index.min.js"
+            },
+            "GRID_MEMORY": {
+                "@m2c2kit/core": "https://cdn.jsdelivr.net/npm/@m2c2kit/core@0.3.36/dist/index.min.js",
+                "@m2c2kit/session": "https://cdn.jsdelivr.net/npm/@m2c2kit/session@0.3.18/dist/index.min.js",
+                "@m2c2kit/addons": "https://cdn.jsdelivr.net/npm/@m2c2kit/addons@0.3.35/dist/index.min.js",
+                "@m2c2kit/physics": "https://cdn.jsdelivr.net/npm/@m2c2kit/physics@0.1.23/dist/index.min.js",
+                "@m2c2kit/data-calc": "https://cdn.jsdelivr.net/npm/@m2c2kit/data-calc@0.8.7/dist/index.min.js",
+                "@m2c2kit/assessment-grid-memory": "https://cdn.jsdelivr.net/npm/@m2c2kit/assessment-grid-memory@0.8.34/dist/index.min.js"
+            }
+        };
+
+        // Map HTML task names to M2C2_LIBRARIES keys
+        const TASK_TO_LIBRARY_KEY = {
+            'SYMBOL_SEARCH': 'SYMBOL_SEARCH',
+            'GRID_MEMORY': 'GRID_MEMORY',
+            'COLOR_DOTS': 'COLOR_DOTS',
+            'COLOR_SHAPES': 'COLOR_SHAPES'
+        };
+
+        // Extract version from assessment URL
+        function getAssessmentVersion(taskName) {
+            const libraryKey = TASK_TO_LIBRARY_KEY[taskName];
+            if (!libraryKey || !M2C2_LIBRARIES[libraryKey]) {
+                return 'N/A';
+            }
+
+            const libraries = M2C2_LIBRARIES[libraryKey];
+            // Find the assessment-specific library URL (not core, session, etc.)
+            for (const [libName, url] of Object.entries(libraries)) {
+                if (libName.includes('/assessment-')) {
+                    // Extract version from URL like "...@1.2.0/dist/..."
+                    const versionMatch = url.match(/@([\d.]+)\//);
+                    if (versionMatch) {
+                        return versionMatch[1];
+                    }
+                }
+            }
+            return 'N/A';
+        }
+
+        // Populate version displays on page load
+        function populateVersions() {
+            document.querySelectorAll('.version-display').forEach(versionEl => {
+                const taskName = versionEl.getAttribute('data-version-for');
+                const version = getAssessmentVersion(taskName);
+                const versionNumberSpan = versionEl.querySelector('.version-number');
+                if (versionNumberSpan) {
+                    versionNumberSpan.textContent = version;
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Populate version information
+            populateVersions();
+
             // Initialize Sortable.js for dragging tasks
             const sortable = new Sortable(document.getElementById('sortableTasks'), {
                 animation: 150,
-                ghostClass: 'sortable-ghost'
+                ghostClass: 'sortable-ghost',
+                onEnd: function () {
+                    // Hide download link when task order changes
+                    hideDownloadLink();
+                }
             });
+
+            // Function to hide download link
+            function hideDownloadLink() {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = '';
+                downloadLink.download = '';
+                downloadLink.textContent = '';
+                downloadLink.style.display = 'none';
+            }
+
+            // Add change listeners to all form inputs
+            document.getElementById('taskForm').addEventListener('input', hideDownloadLink);
+            document.getElementById('taskForm').addEventListener('change', hideDownloadLink);
         });
 
         function validateForm() {
@@ -289,6 +465,18 @@
                 });
             }
 
+            const hasAtLeastOneTask = taskList.some(taskEl => parseInt(taskEl.querySelector('input').value, 10) > 0);
+
+            if (!hasAtLeastOneTask) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No Tasks Selected',
+                    html: 'You must have at least one task with trials greater than 0.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
             var addParamsValid = true;
 
             // make sure additional params is in the correct format (csv, key=value or key=value::type)
@@ -326,7 +514,6 @@
                 });
                 return false;
             }
-
             return true;
         }
 
@@ -371,6 +558,7 @@
                 var task = taskOrder[i];
                 var taskTrials = document.getElementById(task).value;
                 var taskParams = document.getElementById(task + "_PARAMS").value;
+
                 sessionActivities.push({
                     "task": task,
                     "trials": taskTrials,
@@ -386,36 +574,59 @@
 
             // Create a download link
             downloadLink.href = URL.createObjectURL(qsf);
-            downloadLink.download = 'm2c2_qualtrics.qsf';
+            downloadLink.download = studyId + '.qsf';
             downloadLink.textContent = 'Click here to download your Qualtrics QSF File';
             downloadLink.style.display = 'block';
         });
+
+        // Helper function to generate JavaScript code for importMaps from M2C2_LIBRARIES
+        function generateImportMapsJS() {
+            let jsCode = "// Define import maps for each assessment type\n    const importMaps = {\n";
+
+            const assessments = Object.entries(M2C2_LIBRARIES);
+            assessments.forEach(([assessment, libraries], assessmentIndex) => {
+                const isLastAssessment = assessmentIndex === assessments.length - 1;
+                jsCode += `        "${assessment}": {\n`;
+
+                const libEntries = Object.entries(libraries);
+                libEntries.forEach(([lib, url], index) => {
+                    const isLast = index === libEntries.length - 1;
+                    jsCode += `            "${lib}": "${url}"${isLast ? '' : ','}\n`;
+                });
+
+                jsCode += `        }${isLastAssessment ? '' : ','}\n`;
+            });
+
+            jsCode += "    };";
+
+            return jsCode;
+        }
 
         function generateQSF(language, autoComplete, studyId, sessionActivities, qsfGenVersion) {
             const qsf =
                 {
                     "SurveyEntry": {
-                        "SurveyID": "SV_9TC8jf331SBquzk",
-                        "SurveyName": "M2C2",
+                        "SurveyID": "SV_cPlIqzZsPLatonc",
+                        "SurveyName": "demo-study",
                         "SurveyDescription": null,
                         "SurveyOwnerID": "UR_0ciZllifcla7X4F",
                         "SurveyBrandID": "pennstate",
                         "DivisionID": "DV_7VdU3bhgUIW23EE",
                         "SurveyLanguage": "EN",
-                        "SurveyActiveResponseSet": "RS_1LjT8NmHBnUgp14",
+                        "SurveyActiveResponseSet": "RS_5p4EPEro3hmvauy",
                         "SurveyStatus": "Active",
                         "SurveyStartDate": "0000-00-00 00:00:00",
                         "SurveyExpirationDate": "0000-00-00 00:00:00",
-                        "SurveyCreationDate": "2025-05-28 07:05:07",
+                        "SurveyCreationDate": "2026-02-09 07:03:37",
                         "CreatorID": "UR_0ciZllifcla7X4F",
-                        "LastModified": "2025-05-28 13:03:25",
+                        "LastModified": "2026-02-09 07:12:17",
                         "LastAccessed": "0000-00-00 00:00:00",
-                        "LastActivated": "2025-05-28 12:36:53",
+                        "LastActivated": "2026-02-09 07:03:44",
                         "Deleted": null
                     },
                     "SurveyElements": [
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "BL",
                             "PrimaryAttribute": "Survey Blocks",
                             "SecondaryAttribute": null,
@@ -440,7 +651,7 @@
                             ]
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "FL",
                             "PrimaryAttribute": "Survey Flow",
                             "SecondaryAttribute": null,
@@ -454,81 +665,81 @@
                                         "FlowID": "FL_4",
                                         "EmbeddedData": [
                                             {
-                                                "Description": "M2C2_ASSESSMENT_00_NUM_TRIALS",
+                                                "Description": "__js_M2C2_ASSESSMENT_00_NUM_TRIALS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_00_NUM_TRIALS",
+                                                "Field": "__js_M2C2_ASSESSMENT_00_NUM_TRIALS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "2"
+                                                "Value": "1"
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_01_NUM_TRIALS",
+                                                "Description": "__js_M2C2_ASSESSMENT_01_NUM_TRIALS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_01_NUM_TRIALS",
+                                                "Field": "__js_M2C2_ASSESSMENT_01_NUM_TRIALS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "2"
+                                                "Value": "1"
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_02_NUM_TRIALS",
+                                                "Description": "__js_M2C2_ASSESSMENT_02_NUM_TRIALS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_02_NUM_TRIALS",
+                                                "Field": "__js_M2C2_ASSESSMENT_02_NUM_TRIALS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "2"
+                                                "Value": "1"
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_03_NUM_TRIALS",
+                                                "Description": "__js_M2C2_ASSESSMENT_03_NUM_TRIALS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_03_NUM_TRIALS",
+                                                "Field": "__js_M2C2_ASSESSMENT_03_NUM_TRIALS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "2"
+                                                "Value": "1"
                                             },
                                             {
-                                                "Description": "M2C2_LANGUAGE",
+                                                "Description": "__js_M2C2_LANGUAGE",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_LANGUAGE",
+                                                "Field": "__js_M2C2_LANGUAGE",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
                                                 "Value": "en-US"
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_ORDER",
+                                                "Description": "__js_M2C2_ASSESSMENT_ORDER",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_ORDER",
+                                                "Field": "__js_M2C2_ASSESSMENT_ORDER",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
                                                 "Value": "SYMBOL_SEARCH,GRID_MEMORY,COLOR_DOTS,COLOR_SHAPES"
                                             },
                                             {
-                                                "Description": "M2C2_AUTO_ADVANCE",
+                                                "Description": "__js_M2C2_AUTO_ADVANCE",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_AUTO_ADVANCE",
+                                                "Field": "__js_M2C2_AUTO_ADVANCE",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "FALSE"
+                                                "Value": "TRUE"
                                             },
                                             {
-                                                "Description": "M2C2_QSF_GEN_VERSION",
+                                                "Description": "__js_M2C2_QSF_GEN_VERSION",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_QSF_GEN_VERSION",
+                                                "Field": "__js_M2C2_QSF_GEN_VERSION",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "?????"
+                                                "Value": "2026_02_09"
                                             },
                                             {
-                                                "Description": "M2C2_STUDY_ID",
+                                                "Description": "__js_M2C2_STUDY_ID",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_STUDY_ID",
+                                                "Field": "__js_M2C2_STUDY_ID",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
@@ -567,45 +778,81 @@
                                                 "AnalyzeText": false
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_00_ADD_PARAMS",
+                                                "Description": "__js_M2C2_PARTICIPANT_ID",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_00_ADD_PARAMS",
+                                                "Field": "__js_M2C2_PARTICIPANT_ID",
+                                                "VariableType": "String",
+                                                "DataVisibility": [],
+                                                "AnalyzeText": false,
+                                                "Value": "${e:\/\/Field\/M2C2_PARTICIPANT_ID}"
+                                            },
+                                            {
+                                                "Description": "__js_M2C2_SESSION_ID",
+                                                "Type": "Custom",
+                                                "Field": "__js_M2C2_SESSION_ID",
+                                                "VariableType": "String",
+                                                "DataVisibility": [],
+                                                "AnalyzeText": false,
+                                                "Value": "${e:\/\/Field\/M2C2_SESSION_ID}"
+                                            },
+                                            {
+                                                "Description": "__js_M2C2_GROUP_ID",
+                                                "Type": "Custom",
+                                                "Field": "__js_M2C2_GROUP_ID",
+                                                "VariableType": "String",
+                                                "DataVisibility": [],
+                                                "AnalyzeText": false,
+                                                "Value": "${e:\/\/Field\/M2C2_GROUP_ID}"
+                                            },
+                                            {
+                                                "Description": "__js_M2C2_WAVE_ID",
+                                                "Type": "Custom",
+                                                "Field": "__js_M2C2_WAVE_ID",
+                                                "VariableType": "String",
+                                                "DataVisibility": [],
+                                                "AnalyzeText": false,
+                                                "Value": "${e:\/\/Field\/M2C2_WAVE_ID}"
+                                            },
+                                            {
+                                                "Description": "__js_M2C2_ASSESSMENT_00_ADD_PARAMS",
+                                                "Type": "Custom",
+                                                "Field": "__js_M2C2_ASSESSMENT_00_ADD_PARAMS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
                                                 "Value": ""
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_01_ADD_PARAMS",
+                                                "Description": "__js_M2C2_ASSESSMENT_01_ADD_PARAMS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_01_ADD_PARAMS",
+                                                "Field": "__js_M2C2_ASSESSMENT_01_ADD_PARAMS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
                                                 "Value": ""
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_02_ADD_PARAMS",
+                                                "Description": "__js_M2C2_ASSESSMENT_02_ADD_PARAMS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_02_ADD_PARAMS",
+                                                "Field": "__js_M2C2_ASSESSMENT_02_ADD_PARAMS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
                                                 "Value": ""
                                             },
                                             {
-                                                "Description": "M2C2_ASSESSMENT_03_ADD_PARAMS",
+                                                "Description": "__js_M2C2_ASSESSMENT_03_ADD_PARAMS",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_ASSESSMENT_03_ADD_PARAMS",
+                                                "Field": "__js_M2C2_ASSESSMENT_03_ADD_PARAMS",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
-                                                "Value": "number_of_different_colors_trials=1,shapes_presented_duration_ms=500"
+                                                "Value": ""
                                             },
                                             {
-                                                "Description": "M2C2_DEBUG",
+                                                "Description": "__js_M2C2_DEBUG",
                                                 "Type": "Custom",
-                                                "Field": "M2C2_DEBUG",
+                                                "Field": "__js_M2C2_DEBUG",
                                                 "VariableType": "String",
                                                 "DataVisibility": [],
                                                 "AnalyzeText": false,
@@ -619,113 +866,25 @@
                                         "FlowID": "FL_2",
                                         "Autofill": []
                                     },
-                                    {
-                                        "Type": "EmbeddedData",
-                                        "FlowID": "FL_5",
-                                        "EmbeddedData": [
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_00_TRIAL_DATA_00",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_00_TRIAL_DATA_00",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            },
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_00_TRIAL_DATA_01",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_00_TRIAL_DATA_01",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "Type": "EmbeddedData",
-                                        "FlowID": "FL_6",
-                                        "EmbeddedData": [
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_01_TRIAL_DATA_00",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_01_TRIAL_DATA_00",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            },
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_01_TRIAL_DATA_01",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_01_TRIAL_DATA_01",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "Type": "EmbeddedData",
-                                        "FlowID": "FL_7",
-                                        "EmbeddedData": [
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_02_TRIAL_DATA_00",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_02_TRIAL_DATA_00",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            },
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_02_TRIAL_DATA_01",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_02_TRIAL_DATA_01",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "Type": "EmbeddedData",
-                                        "FlowID": "FL_8",
-                                        "EmbeddedData": [
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_03_TRIAL_DATA_00",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_03_TRIAL_DATA_00",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            },
-                                            {
-                                                "Description": "M2C2_ASSESSMENT_03_TRIAL_DATA_01",
-                                                "Type": "Recipient",
-                                                "Field": "M2C2_ASSESSMENT_03_TRIAL_DATA_01",
-                                                "VariableType": "String",
-                                                "DataVisibility": [],
-                                                "AnalyzeText": false
-                                            }
-                                        ]
-                                    }
                                 ],
                                 "Properties": {
-                                    "Count": 8
+                                    "Count": 0
                                 }
                             }
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "PL",
                             "PrimaryAttribute": "Preview Link",
                             "SecondaryAttribute": null,
                             "TertiaryAttribute": null,
                             "Payload": {
                                 "PreviewType": "Brand",
-                                "PreviewID": "7f463a81-d395-4e74-9460-3265da89012c"
+                                "PreviewID": "7d642a65-38e6-49e3-8bda-8dd7fa105912"
                             }
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "PROJ",
                             "PrimaryAttribute": "CORE",
                             "SecondaryAttribute": null,
@@ -736,7 +895,7 @@
                             }
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "QC",
                             "PrimaryAttribute": "Survey Question Count",
                             "SecondaryAttribute": "1",
@@ -744,15 +903,15 @@
                             "Payload": null
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "RS",
-                            "PrimaryAttribute": "RS_1LjT8NmHBnUgp14",
-                            "SecondaryAttribute": "Default Response Set",
+                            "PrimaryAttribute": "RS_5p4EPEro3hmvauy",
+                            "SecondaryAttribute": null,
                             "TertiaryAttribute": null,
                             "Payload": null
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "SCO",
                             "PrimaryAttribute": "Scoring",
                             "SecondaryAttribute": null,
@@ -768,7 +927,7 @@
                             }
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "SO",
                             "PrimaryAttribute": "Survey Options",
                             "SecondaryAttribute": null,
@@ -786,7 +945,7 @@
                                 "Footer": "",
                                 "ProgressBarDisplay": "None",
                                 "PartialData": "+1 week",
-                                "ValidationMessage": "",
+                                "ValidationMessage": null,
                                 "PreviousButton": "",
                                 "NextButton": " \u2192 ",
                                 "SurveyTitle": "Qualtrics Survey | Qualtrics Experience Management",
@@ -800,17 +959,50 @@
                                 "NewScoring": 1,
                                 "SurveyMetaDescription": "The most powerful, simple and trusted way to gather experience data. Start your journey to experience management and try a free account today.",
                                 "headerMid": "",
-                                "ProtectSelectionIds": true
+                                "EOSMessage": null,
+                                "ShowExportTags": "false",
+                                "CollectGeoLocation": "false",
+                                "PasswordProtection": "No",
+                                "AnonymizeResponse": "No",
+                                "RefererCheck": "No",
+                                "BallotBoxStuffingPreventionBehavior": null,
+                                "BallotBoxStuffingPreventionMessage": null,
+                                "BallotBoxStuffingPreventionMessageLibrary": null,
+                                "BallotBoxStuffingPreventionURL": null,
+                                "RecaptchaV3": "false",
+                                "ConfirmStart": false,
+                                "AutoConfirmStart": false,
+                                "RelevantID": "false",
+                                "RelevantIDLockoutPeriod": "+30 days",
+                                "UseCustomSurveyLinkCompletedMessage": null,
+                                "SurveyLinkCompletedMessage": null,
+                                "SurveyLinkCompletedMessageLibrary": null,
+                                "ResponseSummary": "No",
+                                "EOSMessageLibrary": null,
+                                "EOSRedirectURL": null,
+                                "EmailThankYou": "false",
+                                "ThankYouEmailMessageLibrary": null,
+                                "ThankYouEmailMessage": null,
+                                "ValidateMessage": "false",
+                                "ValidationMessageLibrary": null,
+                                "InactiveSurvey": "DefaultMessage",
+                                "PartialDeletion": null,
+                                "PartialDataCloseAfter": "LastActivity",
+                                "InactiveMessageLibrary": null,
+                                "InactiveMessage": null,
+                                "AvailableLanguages": {
+                                    "EN": []
+                                }
                             }
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "SQ",
                             "PrimaryAttribute": "QID1",
-                            "SecondaryAttribute": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not mo...",
+                            "SecondaryAttribute": "PLEASE READ!!!\u00a0 CHANGES AS OF 2026-02-09 To support both the New Qualtrics survey-taking experien..",
                             "TertiaryAttribute": null,
                             "Payload": {
-                                "QuestionText": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not modify any entries in the Survey Flow, except for 'M2C2_STUDY_ID'.<br><br>Once you have the survey link from Qualtrics, you can append the following keys:<br><br>M2C2_PARTICIPANT_ID = Participant ID<br>M2C2_SESSION_ID = Session ID&nbsp;<br>M2C2_GROUP_ID =&nbsp;Group ID<br>M2C2_WAVE_ID =&nbsp;Wave ID<br><br>If you do not provide these keys, the values will be \"null\" in your data. DO NOT SET THESE VALUES IN THE SURVEY FLOW, they must be appended to your survey link.<br><br>Example:<br><br>Survey Link from Qualtrics:&nbsp;https:\/\/YOURORG.qualtrics.com\/jfe\/form\/SV_XXXXXXXXXXXXXXX<br><br>Survey Link with appended data:&nbsp;https:\/\/YOURORG.qualtrics.com\/jfe\/form\/SV_XXXXXXXXXXXXXXX?M2C2_PARTICIPANT_ID=123&amp;M2C2_SESSION_ID=SESSION1&amp;M2C2_GROUP_ID=GROUP1&amp;M2C2_WAVE_ID=WAVE1<br>",
+                                "QuestionText": "<div style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5;\">\n\n  <h3 style=\"color:#b00000;\">PLEASE READ!!!&nbsp;<\/h3><div><br><\/div>\n\n  <p><strong>CHANGES AS OF 2026-02-09<\/strong><\/p><p><strong><br><\/strong><\/p>\n\n  <p>\n    To support both the <strong>New Qualtrics survey-taking experience<\/strong> and\n    <strong>legacy mode<\/strong>, M2C2 now uses Qualtrics embedded variables prefixed\n    with <code>__js_<\/code>.\n  <\/p><p><br><\/p>\n\n  <p>\n    <strong>\u26a0\ufe0f Participant links do NOT need to be updated.<\/strong>\n  <\/p><p><strong><br><\/strong><\/p>\n\n  <p>\n    Existing survey links that already pass participant metadata will continue to work\n    as-is. M2C2 reads values from the survey URL and automatically maps them to their\n    corresponding <code>__js_<\/code> embedded variables using Survey Flow logic.\n  <\/p><p><br><\/p>\n\n  <p><strong>Supported URL parameters:<\/strong><\/p>\n  <ul>\n    <li><code>M2C2_PARTICIPANT_ID<\/code><\/li>\n    <li><code>M2C2_SESSION_ID<\/code><\/li>\n    <li><code>M2C2_GROUP_ID<\/code><\/li>\n    <li><code>M2C2_WAVE_ID<\/code><\/li>\n  <\/ul>\n<br>\n  <p>\n    These values are then used internally by M2C2 through their\n    <code>__js_<\/code> equivalents.\n  <\/p><p><br><\/p>\n\n  <p>\n    If these parameters are not provided in the survey URL, their values will be\n    recorded as <code>null<\/code> in the data.\n  <\/p><p><br><\/p>\n\n  <p>\n    <strong>Do not manually set these variables in the Survey Flow.<\/strong>\n    They must be supplied via the survey link URL parameters.\n  <\/p><p><br><\/p>\n\n  <p><strong>Example:<\/strong><\/p>\n\n  <p>\n    Survey link from Qualtrics:<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;<code>https:\/\/YOURORG.qualtrics.com\/jfe\/form\/SV_XXXXXXXXXXXXXXX<\/code>\n  <\/p>\n\n  <p>\n    Survey link with appended data:<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;<code>\n      https:\/\/YOURORG.qualtrics.com\/jfe\/form\/SV_XXXXXXXXXXXXXXX?M2C2_PARTICIPANT_ID=123&amp;M2C2_SESSION_ID=SESSION1&amp;M2C2_GROUP_ID=GROUP1&amp;M2C2_WAVE_ID=WAVE1<\/code>\n  <\/p>\n\n<\/div>",
                                 "DefaultChoices": false,
                                 "DataExportTag": "Q1",
                                 "QuestionID": "QID1",
@@ -823,7 +1015,7 @@
                                 "Configuration": {
                                     "QuestionDescriptionOption": "UseText"
                                 },
-                                "QuestionDescription": "This placeholder will load M2C2. It will be hidden from the participant. Do not delete. Do not mo...",
+                                "QuestionDescription": "PLEASE READ!!!\u00a0 CHANGES AS OF 2026-02-09 To support both the New Qualtrics survey-taking experien...",
                                 "ChoiceOrder": [],
                                 "Validation": {
                                     "Settings": {
@@ -834,11 +1026,12 @@
                                 "Language": [],
                                 "NextChoiceId": 4,
                                 "NextAnswerId": 1,
-                                "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () {\n    jQuery(\"#\" + this.questionId).hide();\n\n    console.log(\"Starting M2C2Kit routine...\");\n\n    \/\/ Add a container for the M2C2Kit\n    jQuery(\"body\").append('<div id=\"m2c2kit-container\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: white;\"><\/div>');\n    jQuery(\"#m2c2kit-container\").append('<div id=\"m2c2kit\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;\"><\/div>');\n\n    \/\/ Load the module shims\n    var esModuleShims = document.createElement('script');\n    esModuleShims.src = 'https:\/\/ga.jspm.io\/npm:es-module-shims@1.10.1\/dist\/es-module-shims.js';\n    document.head.appendChild(esModuleShims);\n\n    \/\/ Load the import map\n    var importMap = document.createElement('script');\n    importMap.type = 'importmap';\n    importMap.text = JSON.stringify({\n        imports: {\n            \"@m2c2kit\/core\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/core@0.3.32\/dist\/index.min.js\",\n            \"@m2c2kit\/session\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/session@0.3.14\/dist\/index.min.js\",\n            \"@m2c2kit\/addons\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/addons@0.3.31\/dist\/index.min.js\",\n            \"@m2c2kit\/physics\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/physics@0.1.19\/dist\/index.min.js\",\n            \"@m2c2kit\/data-calc\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/data-calc@0.8.3\/dist\/index.min.js\",\n\n            \"@m2c2kit\/assessment-color-dots\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-dots@0.8.30\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-color-shapes\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-color-shapes@0.8.30\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-grid-memory\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-grid-memory@0.8.30\/dist\/index.min.js\",\n            \"@m2c2kit\/assessment-symbol-search\": \"https:\/\/cdn.jsdelivr.net\/npm\/@m2c2kit\/assessment-symbol-search@0.8.30\/dist\/index.min.js\"\n        }\n    });\n    document.head.appendChild(importMap);\n\n    \/\/ Load your main JavaScript module after the page is fully loaded\n    var script = document.createElement('script');\n    script.type = 'module';\n    script.text = `\n        import { ActivityType } from \"@m2c2kit\/core\";\n        import { Session } from \"@m2c2kit\/session\";\n        import { ColorDots } from \"@m2c2kit\/assessment-color-dots\";\n        import { ColorShapes } from \"@m2c2kit\/assessment-color-shapes\";\n        import { GridMemory } from \"@m2c2kit\/assessment-grid-memory\";\n        import { SymbolSearch } from \"@m2c2kit\/assessment-symbol-search\";\n\t\t\n        const m2c2Order = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_ASSESSMENT_ORDER\") + `';\n        const m2c2Language = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_LANGUAGE\") + `';\n        const m2c2AutoAdvance = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_AUTO_ADVANCE\") + `' === \"TRUE\";\n\t\tconst m2c2Debug = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_DEBUG\") + `' === \"TRUE\";\n\t\tconst m2c2StudyId = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_STUDY_ID\") + `';\n\t\tconst m2c2ParticipantId = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_PARTICIPANT_ID\") + `';\n\t\tconst m2c2SessionId = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_SESSION_ID\") + `';\n\t\tconst m2c2GroupId = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_GROUP_ID\") + `';\n\t\tconst m2c2WaveId = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_WAVE_ID\") + `';\n\t\tconst m2c2QSFGenVersion = '` + Qualtrics.SurveyEngine.getEmbeddedData(\"M2C2_QSF_GEN_VERSION\") + `';\n\t\t\n\t\tif (m2c2Debug) {\n\t\t\tconsole.log(\"M2C2 Order: \" + m2c2Order);\n\t\t\tconsole.log(\"M2C2 Language: \" + m2c2Language);\n\t\t\tconsole.log(\"M2C2 Auto Advance: \" + m2c2AutoAdvance);\n\t\t\tconsole.log(\"M2C2 Debug: \" + m2c2Debug);\t\n\t\t\tconsole.log(\"M2C2 Study Id: \" + m2c2StudyId);\t\n\t\t\tconsole.log(\"M2C2 Participant Id: \" + m2c2ParticipantId);\t\n\t\t\tconsole.log(\"M2C2 Session Id: \" + m2c2SessionId);\t\n\t\t\tconsole.log(\"M2C2 Group Id: \" + m2c2GroupId);\t\n\t\t\tconsole.log(\"M2C2 Wave Id: \" + m2c2WaveId);\t\n\t\t\tconsole.log(\"M2C2 QSF Gen Version: \" + m2c2QSFGenVersion);\t\t\t\n\t\t}\n\t\t\n\t\t\/\/ Get order of assessments and handle each dynamically\n        const m2c2OrderArray = m2c2Order.split(',');\n\t\t\n\t\t\/\/ Check that order is valid\n        if ((m2c2OrderArray.length !== 4) || (m2c2OrderArray.length !== new Set(m2c2OrderArray).size)) {\n            console.error('Invalid order string.');\n            alert('Invalid order string.');\n\t\t}\n\t\t\n        const activities = [];\n\n        function buildParams(assessmentIndex, numTrials, language, addParamsString) {\n            var params = { number_of_trials: numTrials, locale: language, scoring: true };\n\t\t\tif (m2c2Debug) {\n            \tconsole.log(\"Additional params: \" + addParamsString);\n\t\t\t}\n            addParamsString = addParamsString.trim();\n            if (addParamsString !== \"\") {\n                var additionalParams = addParamsString.split(',').filter(line => line.trim() !== '');\n                additionalParams.forEach(paramLine => {\n\t\t\t\t\tconst parts = paramLine.split('=').map(part => part.trim());\n\t\t\t\t\tif (parts.length === 2) {\n\t\t\t\t\t\tconst [key, value] = parts;\n\t\t\t\t\t\tparams[key] = value;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconsole.error('Invalid parameter format:', paramLine);\n\t\t\t\t\t}\n                });\n            }\n            return params;\n        }\n\t\tfunction addCommonTrialData(activityInstance, rawActivityName, studyId, participantId, sessionId, groupId, waveId, qsfGenVersion) {\n\t\t\tconst titleCaseName = rawActivityName\n\t\t\t\t.toLowerCase()\n\t\t\t\t.split('_')\n\t\t\t\t.map(word => word.charAt(0).toUpperCase() + word.slice(1))\n\t\t\t\t.join(' ');\n\n\t\t\tactivityInstance.addTrialSchema({\n\t\t\t\tstudy_id: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"ID of the study_id\",\n\t\t\t\t},\n\t\t\t\tactivity_name: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Title case of the activity name\",\n\t\t\t\t},\n\t\t\t\tparticipant_id: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Unique identifier for the participant, provided in the query string\",\n\t\t\t\t},\n\t\t\t\tsession_id: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Unique identifier for the session, provided in the query string\",\n\t\t\t\t},\n\t\t\t\tgroup: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Unique identifier for the study group, provided in the query string\",\n\t\t\t\t},\n\t\t\t\twave: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Unique identifier for the wave of the study, provided in the query string\",\n\t\t\t\t},\n\t\t\t\tqsf_gen_version: {\n\t\t\t\t\ttype: \"string\",\n\t\t\t\t\tdescription: \"Version of QSF Generator utilized\",\n\t\t\t\t},\n\t\t\t});\n\n\t\t\tactivityInstance.addStaticTrialData(\"study_id\", studyId);\n\t\t\tactivityInstance.addStaticTrialData(\"activity_name\", titleCaseName);\n\t\t\tactivityInstance.addStaticTrialData(\"participant_id\", participantId);\n\t\t\tactivityInstance.addStaticTrialData(\"session_id\", sessionId);\n\t\t\tactivityInstance.addStaticTrialData(\"group\", groupId);\n\t\t\tactivityInstance.addStaticTrialData(\"wave\", waveId);\n\t\t\tactivityInstance.addStaticTrialData(\"qsf_gen_version\", qsfGenVersion);\n\t\t}\n\t\t\n\t\t\/\/ Loop through the order and dynamically build activities based on the order\n        for (let i = 0; i < m2c2OrderArray.length; i++) {\n            const assessment = m2c2OrderArray[i];\n            const assessmentIndex = \"M2C2_ASSESSMENT_\" + String(i).padStart(2, '0');\n            const numTrials = parseInt(Qualtrics.SurveyEngine.getEmbeddedData(assessmentIndex + \"_NUM_TRIALS\")) || 0;\n            const addParams = Qualtrics.SurveyEngine.getEmbeddedData(assessmentIndex + \"_ADD_PARAMS\") || \"\";\n\n            if (assessment === 'SYMBOL_SEARCH' && numTrials > 0) {\n                const symbolSearch = new SymbolSearch();\n                symbolSearch.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n    \t\t\taddCommonTrialData(symbolSearch, assessment, m2c2StudyId, m2c2ParticipantId, m2c2SessionId, m2c2GroupId, m2c2WaveId, m2c2QSFGenVersion);\n                activities.push(symbolSearch);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Symbol Search Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"'), and Study Id: \" + m2c2StudyId);\n\t\t\t\t}\t\t\t\t\n            } else if (assessment === 'COLOR_DOTS' && numTrials > 0) {\n                const colorDots = new ColorDots();\n                colorDots.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n    \t\t\taddCommonTrialData(colorDots, assessment, m2c2StudyId, m2c2ParticipantId, m2c2SessionId, m2c2GroupId, m2c2WaveId, m2c2QSFGenVersion);\n                activities.push(colorDots);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Color Dots Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"'), and Study Id: \" + m2c2StudyId);\n\t\t\t\t}\n            } else if (assessment === 'COLOR_SHAPES' && numTrials > 0) {\n                const colorShapes = new ColorShapes();\n                colorShapes.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n    \t\t\taddCommonTrialData(colorShapes, assessment, m2c2StudyId, m2c2ParticipantId, m2c2SessionId, m2c2GroupId, m2c2WaveId, m2c2QSFGenVersion);\n                activities.push(colorShapes);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Color Shapes Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"'), and Study Id: \" + m2c2StudyId);\n\t\t\t\t}\n            } else if (assessment === 'GRID_MEMORY' && numTrials > 0) {\n                const gridMemory = new GridMemory();\n                gridMemory.setParameters(buildParams(i, numTrials, m2c2Language, addParams));\n    \t\t\taddCommonTrialData(gridMemory, assessment, m2c2StudyId, m2c2ParticipantId, m2c2SessionId, m2c2GroupId, m2c2WaveId, m2c2QSFGenVersion);\n                activities.push(gridMemory);\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log(\"Added M2C2 Grid Memory Assessment with \" + numTrials + \" trials using additional parameters ('\" + addParams + \"'), and Study Id: \" + m2c2StudyId);\n\t\t\t\t}\n            }\n        }\n\n        const session = new Session({ activities: activities });\n\n        session.onActivityData((ev) => {\n\t\t\n\t\t\tif (ev.dataType === \"Trial\") {\n\t\t\t\tvar lastTrial = ev.data.trials[ev.data.trials.length - 1];\n\t\t\t\tvar trialIndex = String(lastTrial.trial_index).padStart(2, '0');\n\t\t\t\tvar assessmentIndex = String(session.options.activities.indexOf(session.currentActivity)).padStart(2, '0');\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log('Activity Data:', ev);\n\t\t\t\t\tconsole.log(\"Last trial: \", lastTrial);\n\t\t\t\t\tconsole.log(\"Trial index: \", trialIndex);\n\t\t\t\t\tconsole.log(\"Activity index: \", assessmentIndex);\n\t\t\t\t}\n\t\t\t\tQualtrics.SurveyEngine.setEmbeddedData(\"M2C2_ASSESSMENT_\" + assessmentIndex + \"_TRIAL_DATA_\" + trialIndex, JSON.stringify(lastTrial));\n\t\t\t} else if (ev.dataType === \"Scoring\") {\n\t\t\t\tvar scoring = ev.data;\n\t\t\t\tvar assessmentIndex = String(session.options.activities.indexOf(session.currentActivity)).padStart(2, '0');\n\t\t\t\tif (m2c2Debug) {\n\t\t\t\t\tconsole.log('Activity Data:', ev);\n\t\t\t\t}\n\t\t\t\tQualtrics.SurveyEngine.setEmbeddedData(\"M2C2_ASSESSMENT_\" + assessmentIndex + \"_SCORING_DATA_00\", JSON.stringify(scoring));\n\t\t\t}\n        });\n\n        session.onEnd((ev) => {\n\t\t\tif (m2c2Debug) {\n            \tconsole.log(\"Ending M2C2Kit:\", ev);\n\t\t\t}\n\n            if (m2c2AutoAdvance) {\n                jQuery(\".NextButton\").click();\n                jQuery(\"#Questions\").hide();\n                jQuery(\"#Buttons\").hide();\n            }\n\n            jQuery(\"#m2c2kit-container\").hide();\n        });\n\n        window.m2c2kitSession = session;\n        session.initialize();\n    `;\n    document.body.appendChild(script);\n});"
+                                "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () {\n    // Guard: Prevent re-execution if assessments have already started\n    if (window.__m2c2AssessmentsStarted) {\n        console.log('M2C2 assessments already started, skipping duplicate initialization');\n        return;\n    }\n    window.__m2c2AssessmentsStarted = true;\n\n    //document.getElementById(this.questionId).style.display = \"none\";\n\n    //console.log(\"Starting M2C2Kit routine...\");\n\t\n\t    const qid = this.questionId;\n\t\n\t// Legacy API first\n    if (typeof this.hide === \"function\") {\n        this.hide();\n    }\n\n    // New API: getQuestionContainer()\n    if (typeof this.getQuestionContainer === \"function\") {\n        const container = this.getQuestionContainer();\n        if (container) {\n            container.style.display = \"none\";\n        }\n    }\n\n    // Fallback: NSTE DOM manual hide\n    function hideQuestionFallback() {\n        const el = document.getElementById(qid);\n        if (!el) return requestAnimationFrame(hideQuestionFallback);\n\n        const container = el.closest(\".QuestionOuter, .Question, [data-qid]\") || el;\n        container.style.display = \"none\";\n\n        // Hide inner question text if present\n        const qText = container.querySelector(\".q-question-text, .QuestionText\");\n        if (qText) qText.style.display = \"none\";\n    }\n\n    hideQuestionFallback();\n\n    console.log(\"Starting M2C2Kit routine...\");\n\n    // Add a container for the M2C2Kit iframe\n    const containerHtml = `\n        <div id=\"m2c2kit-container\" style=\"position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: white;\">\n        </div>\n    `;\n    document.body.insertAdjacentHTML(\"beforeend\", containerHtml);\n\n    __IMPORTMAPS_PLACEHOLDER__\n\n    // Assessment class names\n    const assessmentClasses = {\n        \"SYMBOL_SEARCH\": \"SymbolSearch\",\n        \"COLOR_DOTS\": \"ColorDots\",\n        \"COLOR_SHAPES\": \"ColorShapes\",\n        \"GRID_MEMORY\": \"GridMemory\"\n    };\n\n    // Wrapper functions for Qualtrics\n    function getQualtricsVar(name) {\n\n        // NEW runtime\n        if (\n            typeof Qualtrics !== \"undefined\" &&\n            Qualtrics.SurveyEngine &&\n            typeof Qualtrics.SurveyEngine.getJSEmbeddedData === \"function\"\n        ) {\n            console.log(\"New Survey taking experience\");\n            return Qualtrics.SurveyEngine.getJSEmbeddedData(name);\n        }\n\n        // OLD runtime\n        if (\n            typeof Qualtrics !== \"undefined\" &&\n            Qualtrics.SurveyEngine &&\n            typeof Qualtrics.SurveyEngine.getEmbeddedData === \"function\"\n        ) {\n            console.log(\"Old Survey taking experience\");\n            return Qualtrics.SurveyEngine.getEmbeddedData(\"__js_\" + name);\n        }\n\n        console.error(\"Qualtrics variable get failed: no API available\");\n        return null;\n    }\n\n    function setQualtricsVar(name, value) {\n\n        // NEW runtime\n        if (\n            typeof Qualtrics !== \"undefined\" &&\n            Qualtrics.SurveyEngine &&\n            typeof Qualtrics.SurveyEngine.setJSEmbeddedData === \"function\"\n        ) {\n            console.log(\"New Survey taking experience\");\n            Qualtrics.SurveyEngine.setJSEmbeddedData(name, value);\n            return;\n        }\n\n        // OLD runtime\n        if (\n            typeof Qualtrics !== \"undefined\" &&\n            Qualtrics.SurveyEngine &&\n            typeof Qualtrics.SurveyEngine.setEmbeddedData === \"function\"\n        ) {\n            console.log(\"Old Survey taking experience\");\n            Qualtrics.SurveyEngine.setEmbeddedData(\"__js_\" + name, value);\n            return;\n        }\n\n        console.error(\"Qualtrics variable set failed: no API available\");\n    }\n\n    // Get configuration from Qualtrics\n    const m2c2Order = getQualtricsVar(\"M2C2_ASSESSMENT_ORDER\");\n    const m2c2Language = getQualtricsVar(\"M2C2_LANGUAGE\");\n    const m2c2AutoAdvance = getQualtricsVar(\"M2C2_AUTO_ADVANCE\") === \"TRUE\";\n    const m2c2Debug = getQualtricsVar(\"M2C2_DEBUG\") === \"TRUE\";\n    const m2c2StudyId = getQualtricsVar(\"M2C2_STUDY_ID\");\n    const m2c2ParticipantId = getQualtricsVar(\"M2C2_PARTICIPANT_ID\");\n    const m2c2SessionId = getQualtricsVar(\"M2C2_SESSION_ID\");\n    const m2c2GroupId = getQualtricsVar(\"M2C2_GROUP_ID\");\n    const m2c2WaveId = getQualtricsVar(\"M2C2_WAVE_ID\");\n    const m2c2QSFGenVersion = getQualtricsVar(\"M2C2_QSF_GEN_VERSION\");\n\n    if (m2c2Debug) {\n        console.log(\"M2C2 Order: \" + m2c2Order);\n        console.log(\"M2C2 Language: \" + m2c2Language);\n        console.log(\"M2C2 Auto Advance: \" + m2c2AutoAdvance);\n        console.log(\"M2C2 Debug: \" + m2c2Debug);\n        console.log(\"M2C2 Study Id: \" + m2c2StudyId);\n        console.log(\"M2C2 Participant Id: \" + m2c2ParticipantId);\n        console.log(\"M2C2 Session Id: \" + m2c2SessionId);\n        console.log(\"M2C2 Group Id: \" + m2c2GroupId);\n        console.log(\"M2C2 Wave Id: \" + m2c2WaveId);\n        console.log(\"M2C2 QSF Gen Version: \" + m2c2QSFGenVersion);\n    }\n\n    // Get order of assessments\n    const m2c2OrderArray = m2c2Order.split(',');\n\t\n\tconsole.log(m2c2OrderArray);\n\tconsole.log(m2c2OrderArray.length);\n\n\tif (m2c2OrderArray.length < 1) {\n\t\tconsole.error('Invalid order string.');\n\t\talert('Invalid order string.');\n\t}\n\n    // Function to run assessments sequentially\n    function runNextAssessment(currentIndex) {\n        if (currentIndex >= m2c2OrderArray.length) {\n            // All assessments complete\n            if (m2c2Debug) {\n                console.log(\"All assessments complete!\");\n            }\n\n            // Remove iframe and clean up before advancing to next page\n            const oldIframe = document.getElementById('m2c2-iframe');\n            if (oldIframe) {\n                setTimeout(function() {\n                    if (oldIframe.parentNode) {\n                        oldIframe.remove();\n                    }\n                }, 500);\n            }\n\n            // Clean up message handler\n            if (window.m2c2MessageHandler) {\n                window.removeEventListener('message', window.m2c2MessageHandler);\n                window.m2c2MessageHandler = null;\n            }\n\n            // Remove container entirely and auto-advance after cleanup completes\n            setTimeout(function() {\n                const container = document.getElementById(\"m2c2kit-container\");\n                if (container && container.parentNode) {\n                    container.remove();\n                }\n\n                if (m2c2AutoAdvance) {\n                    // Try both old and new survey experience button selectors\n                    let nextBtn = document.querySelector(\".NextButton\");\n                    if (!nextBtn) {\n                        nextBtn = document.querySelector(\"#next-button\");\n                    }\n                    \n                    if (nextBtn) {\n                        console.log(\"Auto-advancing: clicking next button\");\n                        nextBtn.click();\n                    }\n\n                    const q = document.getElementById(\"Questions\");\n                    if (q) q.style.display = \"none\";\n\n                    const b = document.getElementById(\"Buttons\");\n                    if (b) b.style.display = \"none\";\n                }\n            }, 600);\n\n            return;\n        }\n\n        const assessment = m2c2OrderArray[currentIndex];\n        const assessmentIndexStr = \"M2C2_ASSESSMENT_\" + String(currentIndex).padStart(2, '0');\n        const numTrials = parseInt(getQualtricsVar(assessmentIndexStr + \"_NUM_TRIALS\")) || 0;\n        const addParams = getQualtricsVar(assessmentIndexStr + \"_ADD_PARAMS\") || \"\";\n\n        if (numTrials === 0) {\n            if (m2c2Debug) {\n                console.log(\"Skipping \" + assessment + \" (0 trials)\");\n            }\n            runNextAssessment(currentIndex + 1);\n            return;\n        }\n\n        if (!importMaps[assessment]) {\n            console.error(\"No import map defined for assessment: \" + assessment);\n            runNextAssessment(currentIndex + 1);\n            return;\n        }\n\n        if (m2c2Debug) {\n            console.log(\"Starting assessment \" + currentIndex + \": \" + assessment + \" with \" + numTrials + \" trials\");\n        }\n\n        // Remove previous iframe if it exists\n        const oldIframe = document.getElementById('m2c2-iframe');\n        if (oldIframe) {\n            setTimeout(function() {\n            if (oldIframe.parentNode) {\n            oldIframe.remove();\n            }\n            }, 500);\n        }\n\n        // Create iframe for isolated assessment\n        const iframe = document.createElement('iframe');\n        iframe.id = 'm2c2-iframe';\n        iframe.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1001;';\n\n        // Get assessment-specific import map and class name\n        const assessmentImportMap = importMaps[assessment];\n        const assessmentClassName = assessmentClasses[assessment];\n\n        if (m2c2Debug) {\n            console.log(\"Import map for \" + assessment + \":\", assessmentImportMap);\n        }\n\n        // Determine assessment package name\n        let assessmentPackage = '';\n        if (assessment === 'SYMBOL_SEARCH') {\n            assessmentPackage = '@m2c2kit/assessment-symbol-search';\n        } else if (assessment === 'COLOR_DOTS') {\n            assessmentPackage = '@m2c2kit/assessment-color-dots';\n        } else if (assessment === 'COLOR_SHAPES') {\n            assessmentPackage = '@m2c2kit/assessment-color-shapes';\n        } else if (assessment === 'GRID_MEMORY') {\n            assessmentPackage = '@m2c2kit/assessment-grid-memory';\n        }\n\n        // Create import map JSON string\n        const importMapJsonStr = JSON.stringify({ imports: assessmentImportMap }, null, 2);\n\n        if (m2c2Debug) {\n            console.log(\"Import map JSON string:\", importMapJsonStr);\n            console.log(\"Import map JSON string length:\", importMapJsonStr.length);\n        }\n\n        // Build iframe HTML document\n        const iframeDoc = '<!DOCTYPE html>' +\n            '<html>' +\n            '<head>' +\n            '<meta charset=\"UTF-8\">' +\n            '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">' +\n            '<script src=\"https://ga.jspm.io/npm:es-module-shims@1.10.1/dist/es-module-shims.js\"><\\/script>' +\n            '<script type=\"importmap\">' +\n            importMapJsonStr +\n            '<\\/script>' +\n            '</head>' +\n            '<body style=\"margin: 0; padding: 0; overflow: hidden;\">' +\n            '<div id=\"m2c2kit\" style=\"width: 100vw; height: 100vh;\"></div>' +\n            '<script type=\"module\">' +\n            \"import { Session } from '@m2c2kit/session';\" +\n            \"import { \" + assessmentClassName + \" } from '\" + assessmentPackage + \"';\" +\n            \"const currentIndex = \" + currentIndex + \";\" +\n            \"const assessment = \" + JSON.stringify(assessment) + \";\" +\n            \"const assessmentClass = \" + JSON.stringify(assessmentClassName) + \";\" +\n            \"const numTrials = \" + numTrials + \";\" +\n            \"const addParams = \" + JSON.stringify(addParams) + \";\" +\n            \"const m2c2Language = \" + JSON.stringify(m2c2Language) + \";\" +\n            \"const m2c2Debug = \" + m2c2Debug + \";\" +\n            \"const m2c2StudyId = \" + JSON.stringify(m2c2StudyId) + \";\" +\n            \"const m2c2ParticipantId = \" + JSON.stringify(m2c2ParticipantId) + \";\" +\n            \"const m2c2SessionId = \" + JSON.stringify(m2c2SessionId) + \";\" +\n            \"const m2c2GroupId = \" + JSON.stringify(m2c2GroupId) + \";\" +\n            \"const m2c2WaveId = \" + JSON.stringify(m2c2WaveId) + \";\" +\n            \"const m2c2QSFGenVersion = \" + JSON.stringify(m2c2QSFGenVersion) + \";\" +\n            \"function buildParams(numTrials, language, addParamsString) {\" +\n            \"var params = { locale: language, scoring: true, number_of_trials: numTrials };\" +\n            \"if (m2c2Debug) { console.log('Additional params: ' + addParamsString); }\" +\n            \"addParamsString = addParamsString.trim();\" +\n            \"if (addParamsString !== '') {\" +\n            \"var additionalParams = addParamsString.split(',').filter(line => line.trim() !== '');\" +\n            \"additionalParams.forEach(paramLine => {\" +\n            \"const parts = paramLine.split('=').map(part => part.trim());\" +\n            \"if (parts.length === 2) { const [key, value] = parts; params[key] = value; }\" +\n            \"else { console.error('Invalid parameter format:', paramLine); }\" +\n            \"});\" +\n            \"}\" +\n            \"return params;\" +\n            \"}\" +\n            \"function addCommonTrialData(activityInstance, rawActivityName, studyId, participantId, sessionId, groupId, waveId, qsfGenVersion) {\" +\n            \"const titleCaseName = rawActivityName.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');\" +\n            \"activityInstance.addTrialSchema({\" +\n            \"study_id: { type: 'string', description: 'ID of the study_id' },\" +\n            \"activity_name: { type: 'string', description: 'Title case of the activity name' },\" +\n            \"participant_id: { type: 'string', description: 'Unique identifier for the participant' },\" +\n            \"session_id: { type: 'string', description: 'Unique identifier for the session' },\" +\n            \"group: { type: 'string', description: 'Unique identifier for the study group' },\" +\n            \"wave: { type: 'string', description: 'Unique identifier for the wave of the study' },\" +\n            \"qsf_gen_version: { type: 'string', description: 'Version of QSF Generator utilized' }\" +\n            \"});\" +\n            \"activityInstance.addStaticTrialData('study_id', studyId);\" +\n            \"activityInstance.addStaticTrialData('activity_name', titleCaseName);\" +\n            \"activityInstance.addStaticTrialData('participant_id', participantId);\" +\n            \"activityInstance.addStaticTrialData('session_id', sessionId);\" +\n            \"activityInstance.addStaticTrialData('group', groupId);\" +\n            \"activityInstance.addStaticTrialData('wave', waveId);\" +\n            \"activityInstance.addStaticTrialData('qsf_gen_version', qsfGenVersion);\" +\n            \"}\" +\n            \"let activity;\" +\n            \"if (assessmentClass === 'SymbolSearch') { activity = new SymbolSearch(); }\" +\n            \"else if (assessmentClass === 'ColorDots') { activity = new ColorDots(); }\" +\n            \"else if (assessmentClass === 'ColorShapes') { activity = new ColorShapes(); }\" +\n            \"else if (assessmentClass === 'GridMemory') { activity = new GridMemory(); }\" +\n            \"activity.setParameters(buildParams(numTrials, m2c2Language, addParams));\" +\n            \"addCommonTrialData(activity, assessment, m2c2StudyId, m2c2ParticipantId, m2c2SessionId, m2c2GroupId, m2c2WaveId, m2c2QSFGenVersion);\" +\n            \"if (m2c2Debug) { console.log('Created ' + assessment + ' activity with ' + numTrials + ' trials'); }\" +\n            \"const session = new Session({ activities: [activity] });\" +\n            \"session.onActivityData((ev) => {\" +\n            \"if (ev.dataType === 'Trial') {\" +\n            \"var lastTrial = ev.data.trials[ev.data.trials.length - 1];\" +\n            \"var trialIndex = lastTrial.trial_index;\" +\n            \"var trialIndexStr = String(trialIndex).padStart(3, '0');\" +\n            \"var assessmentIndex = String(currentIndex).padStart(2, '0');\" +\n            \"if (m2c2Debug) { console.log('Activity Data:', ev); }\" +\n            \"var trialData = JSON.stringify(lastTrial);\" +\n            \"window.parent.postMessage({ type: 'setQualtricsVar', name: 'M2C2_ASSESSMENT_' + assessmentIndex + '_TRIAL_DATA_' + trialIndexStr, value: trialData }, '*');\" +\n            \"} else if (ev.dataType === 'Scoring') {\" +\n            \"var scoring = ev.data;\" +\n            \"var assessmentIndex = String(currentIndex).padStart(2, '0');\" +\n            \"if (m2c2Debug) { console.log('Scoring Data:', ev); }\" +\n            \"window.parent.postMessage({ type: 'setQualtricsVar', name: 'M2C2_ASSESSMENT_' + assessmentIndex + '_SCORING_DATA_000', value: JSON.stringify(scoring) }, '*');\" +\n            \"} else if (ev.type === 'ActivityData') {\" +\n            \"if (ev.data && ev.data.trials && Array.isArray(ev.data.trials)) {\" +\n            \"var assessmentIndex = String(currentIndex).padStart(2, '0');\" +\n            \"ev.data.trials.forEach(trial => {\" +\n            \"var trialIndex = trial.trial_index;\" +\n            \"var trialIndexStr = String(trialIndex).padStart(3, '0');\" +\n            \"if (m2c2Debug) { console.log('Activity Data:', ev); }\" +\n            \"var trialData = JSON.stringify(trial);\" +\n            \"window.parent.postMessage({ type: 'setQualtricsVar', name: 'M2C2_ASSESSMENT_' + assessmentIndex + '_TRIAL_DATA_' + trialIndexStr, value: trialData }, '*');\" +\n            \"});\" +\n            \"}\" +\n            \"}\" +\n            \"});\" +\n            \"session.onEnd((ev) => {\" +\n            \"if (m2c2Debug) { console.log('Completed assessment ' + currentIndex + ': ' + assessment); }\" +\n            \"window.parent.postMessage({ type: 'assessmentComplete', currentIndex: currentIndex }, '*');\" +\n            \"});\" +\n            \"session.initialize();\" +\n            '<\\/script>' +\n            '</body>' +\n            '</html>';\n\n        if (m2c2Debug) {\n            console.log(\"Generated iframe document (first 500 chars):\", iframeDoc.substring(0, 500));\n        }\n\n        // Set up message listener for iframe communication (add only once)\n        if (window.m2c2MessageHandler) {\n            window.removeEventListener('message', window.m2c2MessageHandler);\n        }\n        window.m2c2MessageHandler = function(event) {\n            if (event.data.type === 'setQualtricsVar') {\n                setQualtricsVar(event.data.name, event.data.value);\n                // Direct textarea setting for NSTE\n                try {\n                    const qid = dataSinkMap[event.data.name];\n                    const el = qid ? document.getElementById(qid) : null;\n                    const ta = el ? el.querySelector('textarea.text-input') : null;\n                    if (ta) {\n                        const proto = Object.getPrototypeOf(ta);\n                        const desc = Object.getOwnPropertyDescriptor(proto, 'value');\n                        if (desc && desc.set) {\n                            desc.set.call(ta, event.data.value);\n                            ta.dispatchEvent(new Event('input', { bubbles: true }));\n                            ta.dispatchEvent(new Event('change', { bubbles: true }));\n                        }\n                    }\n                } catch(e) {}\n            } else if (event.data.type === 'assessmentComplete') {\n                runNextAssessment(event.data.currentIndex + 1);\n            }\n        };\n        window.addEventListener('message', window.m2c2MessageHandler);\n\n        // Set iframe content using srcdoc attribute\n        iframe.srcdoc = iframeDoc;\n        document.getElementById('m2c2kit-container').appendChild(iframe);\n    }\n\n    // Expose function to window for callbacks\n    window.runNextM2C2Assessment = runNextAssessment;\n\n    // Safety check: verify data before submit\n    try {Qualtrics.SurveyEngine.addOnPageSubmit(function(){function setNativeValue(e,v){const p=Object.getPrototypeOf(e);const s=Object.getOwnPropertyDescriptor(p,'value').set;if(s){s.call(e,v);e.dispatchEvent(new Event('input',{bubbles:true}));}};document.querySelectorAll('textarea.text-input').forEach((t,i)=>{if(m2c2Debug)console.log('Textarea'+i+':',t.value.length);});});} catch(e){}\n\n    // Start with first assessment\n    runNextAssessment(0);\n});"
                             }
+
                         },
                         {
-                            "SurveyID": "SV_9TC8jf331SBquzk",
+                            "SurveyID": "SV_cPlIqzZsPLatonc",
                             "Element": "STAT",
                             "PrimaryAttribute": "Survey Statistics",
                             "SecondaryAttribute": null,
@@ -853,8 +1046,9 @@
 
             // Function to update EmbeddedData for a given flow ID based on the number of trials
             function updateFlow(flowID, trialCount, taskIndex) {
-                const trialPrefix = "M2C2_ASSESSMENT_0" + taskIndex + "_TRIAL_DATA";
-                const scoringPrefix = "M2C2_ASSESSMENT_0" + taskIndex + "_SCORING_DATA";
+                const paddedIndex = String(taskIndex).padStart(2, '0');
+                const trialPrefix = "__js_M2C2_ASSESSMENT_" + paddedIndex + "_TRIAL_DATA";
+                const scoringPrefix = "__js_M2C2_ASSESSMENT_" + paddedIndex + "_SCORING_DATA";
                 // Remove existing trial data for this flow
                 qsf.SurveyElements[1].Payload.Flow = qsf.SurveyElements[1].Payload.Flow.filter(flow => {
                     return !(flow.FlowID === flowID && flow.Type === "EmbeddedData" && flow.EmbeddedData.length > 0 && flow.EmbeddedData[0].Description.startsWith(trialPrefix));
@@ -893,9 +1087,9 @@
                 }
 
                 const scoringData = {
-                    "Description": `${scoringPrefix}_00`,
+                    "Description": `${scoringPrefix}_000`,
                     "Type": "Recipient",
-                    "Field": `${scoringPrefix}_00`,
+                    "Field": `${scoringPrefix}_000`,
                     "VariableType": "String",
                     "DataVisibility": [],
                     "AnalyzeText": false
@@ -904,30 +1098,526 @@
                 flow.EmbeddedData.push(scoringData);
             }
 
+            function setFlowEmbeddedDataValue(description, value) {
+                const embeddedData = qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData;
+                const target = embeddedData.find(item => item.Description === description);
+                if (target) {
+                    target.Value = value;
+                }
+            }
+
             // modify fields: SYMBOL_SEARCH_NUM_TRIALS, COLOR_SHAPES_NUM_TRIALS, COLOR_DOTS_NUM_TRIALS, GRID_MEMORY_NUM_TRIALS with the values from the form
 
+            // Extract task order from sessionActivities
+            const taskOrder = sessionActivities.map(activity => activity.task);
             var taskOrderString = "";
-            for (let taskIndex = 0; taskIndex < 4; taskIndex++) {
+            const numTasks = taskOrder.length;
+            console.log("Task order:", taskOrder);
+            console.log("Session activities:", sessionActivities);
+            console.log("Number of tasks:", numTasks);
+            for (let taskIndex = 0; taskIndex < taskOrder.length; taskIndex++) {
                 let numTrials = parseInt(sessionActivities[taskIndex].trials);
                 let addParams = sessionActivities[taskIndex].params;
+                const paddedTaskIndex = String(taskIndex).padStart(2, '0');
 
-                qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[taskIndex].Value = numTrials;
-                qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[taskIndex+13].Value = addParams;
+                setFlowEmbeddedDataValue(`__js_M2C2_ASSESSMENT_${paddedTaskIndex}_NUM_TRIALS`, numTrials);
+                setFlowEmbeddedDataValue(`__js_M2C2_ASSESSMENT_${paddedTaskIndex}_ADD_PARAMS`, addParams);
 
-                if (taskIndex < 3) {
+                if (taskIndex < taskOrder.length - 1) {
                     taskOrderString += sessionActivities[taskIndex].task + ",";
                 } else {
                     taskOrderString += sessionActivities[taskIndex].task;
                 }
 
-                updateFlow("FL_" + (taskIndex + 5), numTrials, taskIndex);
+                //updateFlow("FL_" + (taskIndex + 5), numTrials, taskIndex);
             }
 
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[4].Value = language;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[5].Value = taskOrderString;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[6].Value = autoComplete;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[7].Value = qsfGenVersion;
-            qsf.SurveyElements[1].Payload.Flow[0].EmbeddedData[8].Value = studyId;
+            setFlowEmbeddedDataValue('__js_M2C2_LANGUAGE', language);
+            setFlowEmbeddedDataValue('__js_M2C2_ASSESSMENT_ORDER', taskOrderString);
+            setFlowEmbeddedDataValue('__js_M2C2_AUTO_ADVANCE', autoComplete);
+            setFlowEmbeddedDataValue('__js_M2C2_QSF_GEN_VERSION', qsfGenVersion);
+            setFlowEmbeddedDataValue('__js_M2C2_STUDY_ID', studyId);
+
+            // Generate text-entry questions for NSTE data storage
+            // Start QID counter at 2 (QID1 is the M2C2 runner question)
+            let qidCounter = 2;
+
+            // Find the default block to add questions to it
+            const defaultBlock = qsf.SurveyElements.find(el =>
+                el.Element === "BL" && el.Payload && el.Payload[0] && el.Payload[0].Type === "Default"
+            );
+
+            // NEW ARCHITECTURE: One assessment per page
+            // Each assessment with trials > 0 gets its own dedicated page with:
+            // - 1 runner question (QIDx) to execute that assessment
+            // - N trial data fields for that assessment
+            // - 1 scoring data field for that assessment
+
+            console.log('Building individual page structure for each assessment...');
+
+            // Build mapping: assessmentIndex -> pageIndex (assessments with trials > 0)
+            const assessmentToPage = {}; // Maps assessment index to page index
+            const pageToAssessment = []; // Maps page index to assessment index
+            let pageIndex = 0;
+
+            for (let assessmentIndex = 0; assessmentIndex < sessionActivities.length; assessmentIndex++) {
+                const trials = parseInt(sessionActivities[assessmentIndex].trials);
+                if (trials > 0) {
+                    assessmentToPage[assessmentIndex] = pageIndex;
+                    pageToAssessment.push(assessmentIndex);
+                    pageIndex++;
+                }
+            }
+
+            const numPages = pageToAssessment.length;
+            console.log(`Total pages: ${numPages} (one per assessment with trials)`);
+            console.log('Assessment to Page mapping:', assessmentToPage);
+
+            // Initialize dynamic data structures - one per page
+            const dataSinkMaps = []; // Array of maps, one per page
+            const pageElements = []; // Array of element arrays, one per page
+
+            for (let i = 0; i < numPages; i++) {
+                dataSinkMaps.push({});
+                pageElements.push([]);
+            }
+
+            // PRE-CALCULATE: Count fields per page to determine runner QID positions
+            const fieldsPerPage = []; // Number of fields (trials + scoring) per page
+            for (let assessmentIndex = 0; assessmentIndex < sessionActivities.length; assessmentIndex++) {
+                const numTrials = parseInt(sessionActivities[assessmentIndex].trials);
+
+                // Skip assessments with 0 trials
+                if (numTrials === 0) continue;
+
+                if (numTrials > 0) {
+                    const pageIdx = assessmentToPage[assessmentIndex];
+                    const fieldCount = numTrials + 1; // trials + 1 scoring field
+                    fieldsPerPage[pageIdx] = fieldCount;
+                }
+            }
+
+            // Calculate runner QID positions BEFORE creating fields
+            const runnerQIDs = []; // runnerQIDs[pageIdx] = QID for that page's runner
+            const runnerQIDSet = new Set(); // For quick lookup
+            let currentQID = 1; // Start with QID1
+
+            for (let pageIdx = 0; pageIdx < numPages; pageIdx++) {
+                // This page's runner gets the next available QID
+                runnerQIDs.push(`QID${currentQID}`);
+                runnerQIDSet.add(`QID${currentQID}`);
+                currentQID++;
+
+                // Skip past all field QIDs for this page
+                currentQID += fieldsPerPage[pageIdx] || 0;
+            }
+
+            console.log('Pre-calculated runner QIDs:', runnerQIDs);
+            console.log('Expected total QIDs:', currentQID - 1);
+
+            // Reset qidCounter to 2 (QID1 will be the first runner)
+            qidCounter = 2;
+
+            // Process each assessment and create its fields
+            for (let assessmentIndex = 0; assessmentIndex < sessionActivities.length; assessmentIndex++) {
+                const formattedIndex = String(assessmentIndex).padStart(2, '0');
+                const numTrials = parseInt(sessionActivities[assessmentIndex].trials);
+                const originalTask = sessionActivities[assessmentIndex].task;
+
+                // Skip assessments with 0 trials
+                if (numTrials === 0) {
+                    console.log(`Skipping assessment ${assessmentIndex} (${originalTask}): 0 trials`);
+                    continue;
+                }
+
+                // Get the page index for this assessment
+                const pageIdx = assessmentToPage[assessmentIndex];
+                const targetDataSinkMap = dataSinkMaps[pageIdx];
+                const targetElementsArray = pageElements[pageIdx];
+
+                console.log(`Assessment ${assessmentIndex} (${originalTask}): Page ${pageIdx + 1}, Trials: ${numTrials}`);
+
+                const trialPrefix = `M2C2_ASSESSMENT_${formattedIndex}_TRIAL_DATA`;
+                const scoringPrefix = `M2C2_ASSESSMENT_${formattedIndex}_SCORING_DATA`;
+
+                // Create text-entry question for each trial
+                for (let trialIndex = 0; trialIndex < numTrials; trialIndex++) {
+                    const trialIndexStr = String(trialIndex).padStart(3, '0');
+                    const fieldName = `${trialPrefix}_${trialIndexStr}`;
+
+                    // Skip runner QIDs
+                    while (runnerQIDSet.has(`QID${qidCounter}`)) {
+                        qidCounter++;
+                    }
+
+                    const qid = `QID${qidCounter}`;
+
+                    // Add to appropriate dataSinkMap based on target page
+                    targetDataSinkMap[fieldName] = qid;
+
+                    // Create text-entry question element
+                    const textEntryQuestion = {
+                        "SurveyID": "SV_cPlIqzZsPLatonc",
+                        "Element": "SQ",
+                        "PrimaryAttribute": qid,
+                        "SecondaryAttribute": fieldName,
+                        "TertiaryAttribute": null,
+                        "Payload": {
+                            "QuestionText": fieldName,
+                            "DefaultChoices": false,
+                            "DataExportTag": `Q${qidCounter}`,
+                            "QuestionID": qid,
+                            "QuestionType": "TE",
+                            "Selector": "ML",
+                            "DataVisibility": {
+                                "Private": false,
+                                "Hidden": false
+                            },
+                            "Configuration": {
+                                "QuestionDescriptionOption": "UseText"
+                            },
+                            "QuestionDescription": fieldName,
+                            "ChoiceOrder": [],
+                            "Validation": {
+                                "Settings": {
+                                    "Type": "None",
+                                    "ForceResponse": "OFF"
+                                }
+                            },
+                            "GradingData": [],
+                            "Language": [],
+                            "NextChoiceId": 4,
+                            "NextAnswerId": 1,
+                            "SearchSource": {
+                                "AllowFreeResponse": "false"
+                            },
+                            "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () { const qid = this.questionId; const fieldName = '" + fieldName + "'; function getQVar(name) { if (typeof Qualtrics !== \"undefined\" && Qualtrics.SurveyEngine && typeof Qualtrics.SurveyEngine.getJSEmbeddedData === \"function\") { return Qualtrics.SurveyEngine.getJSEmbeddedData(name); } if (typeof Qualtrics !== \"undefined\" && Qualtrics.SurveyEngine && typeof Qualtrics.SurveyEngine.getEmbeddedData === \"function\") { return Qualtrics.SurveyEngine.getEmbeddedData(name); } return null; } const debugMode = getQVar('M2C2_DEBUG') === 'TRUE'; if (debugMode) { console.log('DEBUG MODE: Showing hidden field: ' + qid); return; } if (typeof this.getQuestionContainer === \"function\") { const container = this.getQuestionContainer(); if (container) { container.style.position = \"absolute\"; container.style.left = \"-9999px\"; container.style.top = \"-9999px\"; container.style.width = \"1px\"; container.style.height = \"1px\"; container.style.overflow = \"hidden\"; } } function positionOffscreenFallback() { const el = document.getElementById(qid); if (!el) return requestAnimationFrame(positionOffscreenFallback); const container = el.closest(\".QuestionOuter, .Question, [data-qid]\") || el; container.style.position = \"absolute\"; container.style.left = \"-9999px\"; container.style.top = \"-9999px\"; container.style.width = \"1px\"; container.style.height = \"1px\"; container.style.overflow = \"hidden\"; } positionOffscreenFallback(); });"
+                        }
+                    };
+
+                    qsf.SurveyElements.push(textEntryQuestion);
+
+                    // Add question to the appropriate page array
+                    targetElementsArray.push({
+                        "Type": "Question",
+                        "QuestionID": qid
+                    });
+
+                    qidCounter++;
+                }
+
+                // Create text-entry question for scoring data (only if there are trials)
+                if (numTrials > 0) {
+                    const scoringFieldName = `${scoringPrefix}_000`;
+
+                    // Skip runner QIDs
+                    while (runnerQIDSet.has(`QID${qidCounter}`)) {
+                        qidCounter++;
+                    }
+
+                    const scoringQid = `QID${qidCounter}`;
+
+                    // Add to appropriate dataSinkMap based on target page
+                    targetDataSinkMap[scoringFieldName] = scoringQid;
+
+                    const scoringQuestion = {
+                        "SurveyID": "SV_cPlIqzZsPLatonc",
+                        "Element": "SQ",
+                        "PrimaryAttribute": scoringQid,
+                        "SecondaryAttribute": scoringFieldName,
+                        "TertiaryAttribute": null,
+                        "Payload": {
+                            "QuestionText": scoringFieldName,
+                            "DefaultChoices": false,
+                            "DataExportTag": `Q${qidCounter}`,
+                            "QuestionID": scoringQid,
+                            "QuestionType": "TE",
+                            "Selector": "ML",
+                            "DataVisibility": {
+                                "Private": false,
+                                "Hidden": false
+                            },
+                            "Configuration": {
+                                "QuestionDescriptionOption": "UseText"
+                            },
+                            "QuestionDescription": scoringFieldName,
+                            "ChoiceOrder": [],
+                            "Validation": {
+                                "Settings": {
+                                    "Type": "None",
+                                    "ForceResponse": "OFF"
+                                }
+                            },
+                            "GradingData": [],
+                            "Language": [],
+                            "NextChoiceId": 4,
+                            "NextAnswerId": 1,
+                            "SearchSource": {
+                                "AllowFreeResponse": "false"
+                            },
+                            "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function () { const qid = this.questionId; const fieldName = '" + scoringFieldName + "'; function getQVar(name) { if (typeof Qualtrics !== \"undefined\" && Qualtrics.SurveyEngine && typeof Qualtrics.SurveyEngine.getJSEmbeddedData === \"function\") { return Qualtrics.SurveyEngine.getJSEmbeddedData(name); } if (typeof Qualtrics !== \"undefined\" && Qualtrics.SurveyEngine && typeof Qualtrics.SurveyEngine.getEmbeddedData === \"function\") { return Qualtrics.SurveyEngine.getEmbeddedData(name); } return null; } const debugMode = getQVar('M2C2_DEBUG') === 'TRUE'; if (debugMode) { console.log('DEBUG MODE: Showing hidden field: ' + qid); return; } if (typeof this.getQuestionContainer === \"function\") { const container = this.getQuestionContainer(); if (container) { container.style.position = \"absolute\"; container.style.left = \"-9999px\"; container.style.top = \"-9999px\"; container.style.width = \"1px\"; container.style.height = \"1px\"; container.style.overflow = \"hidden\"; } } function positionOffscreenFallback() { const el = document.getElementById(qid); if (!el) return requestAnimationFrame(positionOffscreenFallback); const container = el.closest(\".QuestionOuter, .Question, [data-qid]\") || el; container.style.position = \"absolute\"; container.style.left = \"-9999px\"; container.style.top = \"-9999px\"; container.style.width = \"1px\"; container.style.height = \"1px\"; container.style.overflow = \"hidden\"; } positionOffscreenFallback(); });"
+                        }
+                    };
+
+                    qsf.SurveyElements.push(scoringQuestion);
+
+                    // Add scoring question to the appropriate page array
+                    targetElementsArray.push({
+                        "Type": "Question",
+                        "QuestionID": scoringQid
+                    });
+
+                    qidCounter++;
+                }
+            }
+
+            // Runner QIDs were already calculated before field creation
+            // dataSinkMaps already have correct field QIDs (skipping runner positions)
+
+            console.log('Final runner QIDs:', runnerQIDs);
+            console.log('Total QIDs used:', qidCounter - 1);
+
+            // Now create runners for each page
+            // QID1 = first page runner, subsequent QIDs for additional pages
+            const qid1Element = qsf.SurveyElements.find(el =>
+                el.Element === "SQ" && el.PrimaryAttribute === "QID1"
+            );
+
+            if (!qid1Element || !qid1Element.Payload || !qid1Element.Payload.QuestionJS) {
+                console.error('Could not find QID1 element');
+                return;
+            }
+
+            // Replace the importMaps placeholder with dynamically generated code from M2C2_LIBRARIES
+            const dynamicImportMapsJS = generateImportMapsJS();
+            qid1Element.Payload.QuestionJS = qid1Element.Payload.QuestionJS.replace("__IMPORTMAPS_PLACEHOLDER__", dynamicImportMapsJS);
+
+            // Helper function to create a runner for an assessment page
+            function createAssessmentRunner(baseElement, pageIdx, assessmentIndex, pageDataSinkMap) {
+                const runnerQID = runnerQIDs[pageIdx];
+                const runner = JSON.parse(JSON.stringify(baseElement));
+
+                // Update basic properties
+                if (pageIdx !== 0) {
+                    runner.PrimaryAttribute = runnerQID;
+                    const runnerQNum = parseInt(runnerQID.replace('QID', ''));
+                    runner.Payload.DataExportTag = `Q${runnerQNum}`;
+                    runner.Payload.QuestionID = runnerQID;
+                }
+
+                // Set description based on assessment name
+                const assessmentName = sessionActivities[assessmentIndex].task || 'Unknown Assessment';
+                const pageLabel = assessmentName;
+
+                // Full warning text for all runners
+                const warningText = `DO NOT EDIT, REMOVE, OR MOVE THIS QUESTION, PLEASE READ!!!<br><br>CHANGES AS OF 2026-02-09<br><br>To support both the New Qualtrics survey-taking experience and legacy mode, M2C2 now uses Qualtrics embedded variables prefixed with __js_.<br><br>⚠️ Participant links do NOT need to be updated.<br><br>Existing survey links that already pass participant metadata will continue to work as-is. M2C2 reads values from the survey URL and automatically maps them to their corresponding __js_ embedded variables using Survey Flow logic.<br><br>Supported URL parameters:<ul><li>M2C2_PARTICIPANT_ID</li><li>M2C2_SESSION_ID</li><li>M2C2_GROUP_ID</li><li>M2C2_WAVE_ID</li></ul>These values are then used internally by M2C2 through their __js_ equivalents.<br><br>If these parameters are not provided in the survey URL, their values will be recorded as null in the data.<br><br>Do not manually set these variables in the Survey Flow. They must be supplied via the survey link URL parameters.<br><br>Example:<br><br>Survey link from Qualtrics:<br>&nbsp;&nbsp;&nbsp;&nbsp;https://YOURORG.qualtrics.com/jfe/form/SV_XXXXXXXXXXXXXXX<br><br>Survey link with appended data:<br>&nbsp;&nbsp;&nbsp;&nbsp;https://YOURORG.qualtrics.com/jfe/form/SV_XXXXXXXXXXXXXXX?M2C2_PARTICIPANT_ID=123&M2C2_SESSION_ID=SESSION1&M2C2_GROUP_ID=GROUP1&M2C2_WAVE_ID=WAVE1`;
+
+                runner.SecondaryAttribute = `PLEASE READ!!!  CHANGES AS OF 2026-02-09 To support both the New Qualtrics survey-taking experien..`;
+                runner.Payload.QuestionText = `${warningText}<br><br><hr><br><span style="color:#c0392b;">Page ${pageIdx + 1}: ${pageLabel}</span>`;
+                runner.Payload.QuestionDescription = `PLEASE READ!!!  CHANGES AS OF 2026-02-09 To support both the New Qualtrics survey-taking experien..`;
+
+                // Inject dataSinkMap and helper functions
+                const dataSinkMapStr = JSON.stringify(pageDataSinkMap, null, 4);
+                const helperFunctions = `
+    // NSTE Data Routing: dataSinkMap maps field names to text-entry QIDs
+    var dataSinkMap = ${dataSinkMapStr};
+    // Cache for trial/scoring values (in-memory only)
+    window.__m2c2FieldCache = window.__m2c2FieldCache || {};
+
+        // Helper to set native input value and trigger React update
+        function setNativeValue(element, value) {
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype,
+                'value'
+            ).set;
+
+            const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLTextAreaElement.prototype,
+                'value'
+            ).set;
+
+            if (element.tagName === 'INPUT') {
+                nativeInputValueSetter.call(element, value);
+            } else if (element.tagName === 'TEXTAREA') {
+                nativeTextAreaValueSetter.call(element, value);
+            }
+
+            const inputEvent = new Event('input', { bubbles: true });
+            const changeEvent = new Event('change', { bubbles: true });
+
+            if (element._valueTracker) {
+                element._valueTracker.setValue('');
+            }
+
+            element.dispatchEvent(inputEvent);
+            element.dispatchEvent(changeEvent);
+        }
+
+    function setDataSinkValue(name, value, retryCount = 0) {
+        window.__m2c2FieldCache[name] = value;
+        const qid = dataSinkMap[name];
+        if (!qid) {
+            console.warn('No data sink QID found for field: ' + name);
+            return;
+        }
+
+        let inputs = [];
+        const containerSelectors = [
+            '#' + qid,
+            '[data-qid="' + qid + '"]',
+            '[data-question-id="' + qid + '"]',
+            '.Question[id*="' + qid + '"]',
+            '[id*="Question~' + qid + '"]',
+            '.QuestionOuter[data-qid="' + qid + '"]'
+        ];
+
+        for (let i = 0; i < containerSelectors.length; i++) {
+            const container = document.querySelector(containerSelectors[i]);
+            if (container) {
+                inputs = Array.from(container.querySelectorAll('input, textarea'));
+                if (inputs.length > 0) break;
+            }
+        }
+
+        if (inputs.length === 0 && retryCount === 0) {
+            const allInputs = document.querySelectorAll('input[type="text"], textarea, input[type="hidden"]');
+            const fieldNames = Object.keys(dataSinkMap);
+            const fieldIndex = fieldNames.indexOf(name);
+            if (fieldIndex >= 0 && fieldIndex < allInputs.length) {
+                inputs = [allInputs[fieldIndex]];
+            }
+        }
+
+        if (inputs.length === 0 && retryCount < 3) {
+            const delay = 100 * Math.pow(2, retryCount);
+            setTimeout(function() {
+                setDataSinkValue(name, value, retryCount + 1);
+            }, delay);
+            return;
+        }
+
+        if (inputs.length > 0) {
+            inputs.forEach(input => {
+                setNativeValue(input, value);
+                if (typeof Qualtrics !== 'undefined' && Qualtrics.SurveyEngine) {
+                    try {
+                        const evt = document.createEvent('HTMLEvents');
+                        evt.initEvent('blur', false, true);
+                        input.dispatchEvent(evt);
+                    } catch(e) {}
+                }
+            });
+        }
+    }
+`;
+
+                const insertAfter = 'document.body.insertAdjacentHTML("beforeend", containerHtml);';
+                if (runner.Payload.QuestionJS.includes(insertAfter)) {
+                    runner.Payload.QuestionJS = runner.Payload.QuestionJS.replace(
+                        insertAfter,
+                        insertAfter + helperFunctions
+                    );
+                }
+
+                // Replace setQualtricsVar with setDataSinkValue
+                runner.Payload.QuestionJS = runner.Payload.QuestionJS.replace(
+                    /window\.parent\.postMessage\(\{ type: 'setQualtricsVar', name: /g,
+                    "window.parent.postMessage({ type: 'setDataSinkValue', name: "
+                );
+                runner.Payload.QuestionJS = runner.Payload.QuestionJS.replace(
+                    "if (event.data.type === 'setQualtricsVar') {\n                setQualtricsVar(event.data.name, event.data.value);",
+                    "if (event.data.type === 'setDataSinkValue') {\n                setDataSinkValue(event.data.name, event.data.value);"
+                );
+
+                // Update guard flag for assessment-specific execution
+                const formattedAssessmentIndex = String(assessmentIndex).padStart(2, '0');
+                runner.Payload.QuestionJS = runner.Payload.QuestionJS.replaceAll(
+                    'window.__m2c2AssessmentsStarted',
+                    `window.__m2c2Assessment${formattedAssessmentIndex}Started`
+                );
+
+                // Add filter logic: only run the specific assessment assigned to this page
+                const filterLogic = `\n    // Page ${pageIdx + 1}: Only run assessment ${assessmentIndex} (${assessmentName})
+\n        // Skip if not the assigned assessment for this page
+        if (currentIndex !== ${assessmentIndex}) {
+            if (m2c2Debug) {
+                console.log('Skipping assessment ' + currentIndex + ' (' + assessment + ') on page ${pageIdx + 1} (assigned to assessment ${assessmentIndex})');
+            }
+            runNextAssessment(currentIndex + 1);
+            return;
+        }\n`;
+
+                runner.Payload.QuestionJS = runner.Payload.QuestionJS.replace(
+                    'const addParams = getQualtricsVar(assessmentIndexStr + "_ADD_PARAMS") || "";',
+                    'const addParams = getQualtricsVar(assessmentIndexStr + "_ADD_PARAMS") || "";' + filterLogic
+                );
+
+                return runner;
+            }
+
+            // Create runners for each assessment page
+            const runners = [];
+            for (let pageIdx = 0; pageIdx < numPages; pageIdx++) {
+                const assessmentIndex = pageToAssessment[pageIdx];
+                const runner = createAssessmentRunner(
+                    qid1Element,
+                    pageIdx,
+                    assessmentIndex,
+                    dataSinkMaps[pageIdx]
+                );
+                runners.push(runner);
+
+                // Add runner reference to page elements
+                pageElements[pageIdx].unshift({
+                    "Type": "Question",
+                    "QuestionID": runnerQIDs[pageIdx]
+                });
+            }
+
+            // Replace QID1 element with first runner, add others to SurveyElements
+            const qid1Index = qsf.SurveyElements.findIndex(el => el.Element === "SQ" && el.PrimaryAttribute === "QID1");
+            if (qid1Index !== -1) {
+                qsf.SurveyElements[qid1Index] = runners[0];
+            }
+
+            // Add remaining runners to SurveyElements
+            for (let i = 1; i < runners.length; i++) {
+                qsf.SurveyElements.push(runners[i]);
+            }
+
+            // qidCounter already represents the last field QID used + 1
+            // Total questions = all fields + all runners
+            console.log('Final qidCounter (last field + 1):', qidCounter);
+            console.log('Total questions:', qidCounter - 1, 'fields +', numPages, 'runners =', (qidCounter - 1 + numPages));
+
+            // Assemble BlockElements: all pages with page breaks between
+            defaultBlock.Payload[0].BlockElements = [];
+            for (let pageIdx = 0; pageIdx < numPages; pageIdx++) {
+                if (pageIdx > 0) {
+                    defaultBlock.Payload[0].BlockElements.push({"Type": "Page Break"});
+                }
+                defaultBlock.Payload[0].BlockElements.push(...pageElements[pageIdx]);
+            }
+
+            console.log('Final BlockElements structure:', defaultBlock.Payload[0].BlockElements.length, 'elements across', numPages, 'pages');
+            for (let pageIdx = 0; pageIdx < numPages; pageIdx++) {
+                const assessmentIndex = pageToAssessment[pageIdx];
+                const assessmentName = sessionActivities[assessmentIndex].task || 'Unknown';
+                console.log(`  Page ${pageIdx + 1}: ${pageElements[pageIdx].length} elements (${assessmentName})`);
+            }
+
+            // Update the Survey Question Count (QC element)
+            // Total questions = highest QID number used
+            const lastRunnerQIDNum = parseInt(runnerQIDs[runnerQIDs.length - 1].replace('QID', ''));
+            const lastFieldQIDNum = qidCounter - 1;
+            const totalQuestionCount = Math.max(lastRunnerQIDNum, lastFieldQIDNum);
+            const qcElement = qsf.SurveyElements.find(el => el.Element === "QC");
+            if (qcElement) {
+                qcElement.SecondaryAttribute = String(totalQuestionCount);
+            }
+
+            // rewrite Survey Entry -> Survey Name with study ID for easier identification
+            qsf.SurveyEntry.SurveyName = studyId;
 
             return new Blob([JSON.stringify(qsf)], { type: 'application/json' });
         }

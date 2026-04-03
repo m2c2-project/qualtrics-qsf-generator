@@ -13,6 +13,12 @@ The **QSF Generator** is a simple, client-side HTML tool designed to generate Qu
 
 ---
 
+## ✅ Update: Qualtrics Survey Experience Compatibility
+
+As of version **2026_03_25**, the QSF Generator is compatible with both the **new Survey Taking Experience / Simple Layout** and the **legacy survey layout** in Qualtrics.
+
+---
+
 ## 🌐 Key Technologies
 
 - **HTML/JavaScript** (runs entirely in-browser)
@@ -49,9 +55,9 @@ The **QSF Generator** is a simple, client-side HTML tool designed to generate Qu
 
 ### 1. Pull the Latest Code
 
-Using ```git clone https://github.com/m2c2-project/qualtrics-qsf-generator.git``` or Download ZIP - be sure to pull your desired branch!
+Use `git clone https://github.com/m2c2-project/qualtrics-qsf-generator.git` or download the ZIP file, and be sure to pull your desired branch.
 
-Please be sure to update the QSF generator version so that we can easily track which version of the generator was used inside the data.
+Please be sure to update the QSF Generator version so that we can easily track which version of the generator was used in the data.
 
 ---
 
@@ -126,17 +132,17 @@ Sometimes, you’ll need to change JavaScript that is embedded directly in the Q
 
 ## Verifying QSF
 
-After you have completed your edits, you should test importing generated QSF files thoroughly. It is important to check the following:
+After you have completed your edits, you should thoroughly test importing generated QSF files. It is important to check the following:
 
 - QSF imports successfully
 - Review embedded data variables:
-  - ```M2C2_PARTICIPANT_ID```, ```M2C2_SESSION_ID```, ```M2C2_GROUP_ID```, ```M2C2_WAVE_ID```, ```M2C2_ASSESSMENT_XX_TRIAL_DATA_XX```, and ```M2C2_ASSESSMENT_XX_SCORING_DATA_XX``` all display as ```Value will be set from Panel or URL.```
-    - If these are not displaying correctly, the value may not update across participants/trial/task completions.
+  - `M2C2_PARTICIPANT_ID`, `M2C2_SESSION_ID`, `M2C2_GROUP_ID`, `M2C2_WAVE_ID`, `M2C2_ASSESSMENT_XX_TRIAL_DATA_XX`, and `M2C2_ASSESSMENT_XX_SCORING_DATA_XX` should all display as `Value will be set from Panel or URL.`
+    - If these are not displayed correctly, the values may not update across participants, trials, or task completions.
 
 ## Production Mode
 
-⚠️ **Important:** After you have finished testing your generated QSF, we recommend updating the survey flow embedded data variable ```M2C2_DEBUG``` to ```FALSE```
+⚠️ **Important:** After you have finished testing your generated QSF, we recommend updating the Survey Flow embedded data variable `M2C2_DEBUG` to `FALSE`.
 
 ## Other Notes
 
-When reviewing the QSF JSON blob, you may notice that embedded data variables contain fields for description, type, field, variable type, data visibility, analyze text, and value. If the type is Custom, and no value is provided then you may have difficulty later changing the value from within Qualtrics. It seems as thoug you cannot change it, but if you click on the embedded data variable name and hit tab on your keyboard it should allow you to modify it. For most variables you can change after importing into Qualtrics if desired, however, it is important that the number of trials matches the number of embedded data variables for that specific task.
+When reviewing the QSF JSON blob, you may notice that embedded data variables contain fields for description, type, field, variable type, data visibility, analyze text, and value. If the type is `Custom` and no value is provided, you may have difficulty changing the value later from within Qualtrics. It may seem as though you cannot change it, but if you click on the embedded data variable name and press Tab on your keyboard, Qualtrics should allow you to modify it. For most variables, you can make changes after importing into Qualtrics if desired; however, it is important that the number of trials matches the number of embedded data variables for that specific task.
